@@ -7,12 +7,12 @@
 using namespace std;
 
 void writeFile(vector<string> v){
-    fstream file;
-    file.open("newCpp.cpp");
-    for(string l:v){
-        file<<l;
-    }
+    ofstream file("newCpp.cpp");
 
+    for(string l:v){
+        file<<l<<endl;
+    }
+    file.close();
 }
 
 int main(){
@@ -26,8 +26,26 @@ int main(){
         cin>>name;
         writeFile(build.singletonbuilder(name));
         
-    }else if(input=="test"){
-        
+    }else if(input=="factory"){
+        string headname;
+        string methodname;
+        //get main class name
+        cout<<"Main Class Name: "<<endl;
+        cin>>headname;
+        //get method name
+        cout<<"Method Name: "<<endl;
+        cin>>methodname;
+        //get classes names
+        cout<<"Classes Name: "<<endl;
+        string classname;
+        vector<string> v;
+        while(classname!="end"){
+            cin>>classname;
+            if(classname!="end"){
+                v.push_back(classname);
+            }
+        }
+        writeFile(build.factorybuilder(headname,methodname,v));
     }
 
     return 0;

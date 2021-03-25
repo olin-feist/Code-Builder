@@ -17,3 +17,21 @@ vector<string> vectorConverter::textToVector(string path){
 
     return test;
 }
+
+vector<string> vectorConverter::textToVector(string path, int low, int high){
+
+    fstream file;
+    file.open(path);
+    string line;
+    vector<string> test;
+    int count=1;
+    while(getline(file, line)){
+        if(count>=low&&count<=high){
+            test.push_back(line);
+        }
+        count++;
+        
+    }
+
+    return test;
+}
