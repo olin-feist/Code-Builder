@@ -1,2 +1,4 @@
 main.cpp
 vectorConverter.cpp
+fileEditor.cpp
+singletonbuilder.cpp
