@@ -45,7 +45,32 @@ int main(){
                 v.push_back(classname);
             }
         }
+
         writeFile(build.factorybuilder(headname,methodname,v));
+
+    }else if(input=="command"){
+        string refclass;
+        string invokerclass;
+        vector<string> classnames;
+
+        cout<<"Reference Class Name: "<<endl;
+        cin>>refclass;
+
+        cout<<"Invoker Class  Name: "<<endl;
+        cin>>invokerclass;       
+        string classname;
+        while(classname!="end"){
+            cout<<"Command Classes Name: "<<endl;
+            
+            cin>>classname;
+            if(classname!="end"){
+                classnames.push_back(classname);
+            }
+        }
+
+         writeFile(build.commandbuilder(refclass,invokerclass,classnames));
+         
+
     }
 
     return 0;

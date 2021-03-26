@@ -3,3 +3,4 @@ main.cpp
 src/vectorConverter.cpp
 src/singletonbuilder.cpp
 src/factorybuilder.cpp
+src/commandbuilder.cpp
