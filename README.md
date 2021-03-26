@@ -13,7 +13,7 @@
 ### C++ Patterns
 - [x] Factory
 - [x] Singleton
-- [ ] Command
+- [x] Command
 - [ ] Composite
 - [ ] Observer 
 - [ ] Adapter 
