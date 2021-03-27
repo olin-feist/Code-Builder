@@ -8,5 +8,6 @@ class cppbuilder{
         vector<string> singletonbuilder(string name);
         vector<string> factorybuilder(string headname,string methodname,vector<string> classnames);
         vector<string> commandbuilder(string refclass,string invokerclass,vector<string> classnames);
+        vector<string> observerbuilder(string classname);
         
 };

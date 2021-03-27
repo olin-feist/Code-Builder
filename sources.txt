@@ -4,3 +4,4 @@ src/vectorConverter.cpp
 src/singletonbuilder.cpp
 src/factorybuilder.cpp
 src/commandbuilder.cpp
+src/observerbuilder.cpp

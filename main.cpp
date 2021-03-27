@@ -71,6 +71,11 @@ int main(){
          writeFile(build.commandbuilder(refclass,invokerclass,classnames));
          
 
+    }else if(input=="observer"){
+        string classname;
+        cout<<"Subject Class Name"<<endl;
+        cin>>classname;
+        writeFile(build.observerbuilder(classname));
     }
 
     return 0;
