@@ -15,7 +15,7 @@
 - [x] Singleton
 - [x] Command
 - [ ] Composite
-- [ ] Observer 
+- [x] Observer 
 - [ ] Adapter 
 - [ ] Facade 
 - [ ] Builder 
