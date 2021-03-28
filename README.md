@@ -1,5 +1,9 @@
 # Code-Builder
 
+##To Build From Command Line
+> - cmake -G "MinGW Makefiles" -B..\build
+> - cmake --build ..\build
+
 ## TO Do List
 
 ### Overall
@@ -9,6 +13,7 @@
 - [ ] Java
 - [ ] Python
 - [ ] Advance User Input
+- [x] CMake
 
 ### C++ Patterns
 - [x] Factory

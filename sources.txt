@@ -1,5 +1,5 @@
 src/fileEditor.cpp
-main.cpp
+src/main.cpp
 src/vectorConverter.cpp
 src/singletonbuilder.cpp
 src/factorybuilder.cpp
