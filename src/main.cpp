@@ -173,14 +173,27 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
 
 
 
-    wxButton *factorybutton = new wxButton(this->panel_top, ID_Factory, _T("Factory"),wxDefaultPosition,wxSize(100, 25), 0);
-    wxButton *observerbutton = new wxButton(this->panel_top, ID_Observer, _T("Observer"),wxDefaultPosition, wxSize(100, 25), 0);
+
+    wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("MainClass"), wxDefaultPosition, wxSize(100, 25), 0);
+    wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, _("MethodName"), wxDefaultPosition, wxSize(100, 25), 0);
+    wxArrayString str;
+    str.Add("1");
+    str.Add("2");
+    str.Add("3");
+    str.Add("4");
+    str.Add("5");
+    str.Add("6");
+    wxChoice *wxCh = new wxChoice(panel_top,wxID_ANY, wxDefaultPosition, wxSize(100, 25),str);
+
     
-    observerbutton->SetMaxSize(wxSize(100, 25));
-    factorybutton->SetMaxSize(wxSize(100, 25));
+    TextCtrl1->SetMaxSize(wxSize(100, 25));
+    TextCtrl2->SetMaxSize(wxSize(100, 25));
+    wxCh->SetMaxSize(wxSize(100, 25));
     
-    this->panelsizer->Add(factorybutton, 1, wxEXPAND | wxALL, 10);
-    this->panelsizer->Add(observerbutton, 1, wxEXPAND | wxALL, 10);
+
+    this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
+    this->panelsizer->Add(TextCtrl2, 1, wxEXPAND | wxALL, 10);
+    this->panelsizer->Add(wxCh, 1, wxEXPAND | wxALL, 10);
 
     panel_top->SetSizerAndFit(panelsizer);
     
