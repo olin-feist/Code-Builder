@@ -43,13 +43,19 @@ class BuildFrame : public wxFrame{
     public:
         BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
         wxPanel* panel_top;
+        wxPanel* panel_bottom;
         wxBoxSizer *panelsizer;
+        wxBoxSizer *panelsizerbot;
 
     private:
         void OnFactory(wxCommandEvent &event);
         void OnObserver(wxCommandEvent &event);
 
         void choiceSelected(wxCommandEvent& event);
+        void amountSelected(wxCommandEvent& event);
+
+        vector<wxControl*> attributes;
+
         wxDECLARE_EVENT_TABLE();
 };
 
@@ -57,7 +63,8 @@ enum{
     ID_Factory = 1,
     ID_Observer = wxID_HIGHEST + 1,
     newcpp = wxID_HIGHEST + 1,
-    choiceevent =wxID_HIGHEST+1
+    choiceevent = wxID_HIGHEST+1,
+    amountsec = 5
 };
 
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
@@ -70,6 +77,7 @@ wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
     EVT_BUTTON(ID_Factory, BuildFrame::OnFactory)
     EVT_BUTTON(ID_Observer,  BuildFrame::OnObserver)
     EVT_CHOICE(choiceevent,BuildFrame::choiceSelected)
+    EVT_CHOICE(amountsec,BuildFrame::amountSelected)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(MyApp);
@@ -128,13 +136,19 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
 
-    wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
+    panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
+    panel_bottom->SetMaxSize(wxSize(200, 40));
+    panel_bottom->SetBackgroundColour(wxColor(100, 200, 100));
+
+    wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(panel_top, 1, wxEXPAND | wxALL, 10);
+    sizer->Add(panel_bottom, 1, wxEXPAND | wxALL, 10);
     
 
     this->SetSizerAndFit(sizer);
 
     panelsizer = new wxBoxSizer(wxVERTICAL);
+    panelsizerbot = new wxBoxSizer(wxVERTICAL);
 
     wxArrayString str;
     str.Add("Factory");
@@ -146,6 +160,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     panelsizer->Add(wxCh, 1, wxEXPAND | wxALL, 10);
 
     panel_top->SetSizerAndFit(panelsizer);
+    panel_bottom->SetSizerAndFit(panelsizerbot);
 
     SetClientSize(wxSize(400,400));
 }
@@ -153,7 +168,29 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(1100, 800));
 BuildFrame* Frame;
 
+void BuildFrame::amountSelected(wxCommandEvent &event){
+    cout<<attributes.size()<<endl;
+    if(attributes.size()>3){
+        for(int i=3;i<attributes.size();i++){
+            cout<<i<<endl;
+            attributes[i]->Destroy();
+        }
+        attributes.erase(attributes.begin()+3,attributes.end());
+    }
+    cout<<attributes.size()<<endl;
 
+    for(int i=0;i<=event.GetInt();i++){
+        
+        wxTextCtrl *temp = new wxTextCtrl(this->panel_top, wxID_ANY, _(""), wxDefaultPosition, wxSize(100, 25), 0);
+        temp->SetMaxSize(wxSize(100, 25));
+        this->panelsizer->Add(temp, 1, wxEXPAND | wxALL, 10);
+        attributes.push_back(temp);
+    }
+    
+
+
+    this->panel_top->SetSizerAndFit(panelsizer);
+}
 
 void BuildFrame::OnFactory(wxCommandEvent &event){
     cout<<"factory"<<endl;
@@ -169,39 +206,75 @@ void MyFrame::OnQuit(wxCommandEvent& event){
 }
 
 void BuildFrame::choiceSelected(wxCommandEvent& event){
+    for(wxControl* w: attributes){
+        w->Destroy();
+        cout<<"test"<<endl;
+    }
+    attributes.clear();
     
 
 
+   
+    if(event.GetString()=="Factory"){
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MainClass"), wxDefaultPosition, wxSize(100, 25), 0);
+        wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MethodName"), wxDefaultPosition, wxSize(100, 25), 0);
+        wxArrayString str;
+        str.Add("1");
+        str.Add("2");
+        str.Add("3");
+        str.Add("4");
+        str.Add("5");
+        str.Add("6");
+        wxChoice *amount = new wxChoice(this->panel_top, amountsec, wxDefaultPosition, wxSize(100, 25),str);
+
+        
+        
+        //add create button
+        wxButton* createbtn = new wxButton(this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        
+        
+        
+
+        createbtn->SetMaxSize(wxSize(100, 25));
+        TextCtrl1->SetMaxSize(wxSize(100, 25));
+        TextCtrl2->SetMaxSize(wxSize(100, 25));
+        amount->SetMaxSize(wxSize(100, 25));
+        
+        
+
+        this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
+        this->panelsizer->Add(TextCtrl2, 1, wxEXPAND | wxALL, 10);
+        this->panelsizer->Add(amount, 1, wxEXPAND | wxALL, 10);
+        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+
+        attributes.push_back(TextCtrl1);
+        attributes.push_back(TextCtrl2);
+        attributes.push_back(amount);
+        
+        
+
+    }else if(event.GetString()=="Observer"){
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), 0);
+        TextCtrl1->SetMaxSize(wxSize(100, 25));
+        
+        wxButton* createbtn = new wxButton( this->panel_top, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        createbtn->SetMaxSize(wxSize(100, 25));
+
+        this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
+        this->panelsizer->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+
+        attributes.push_back(TextCtrl1);
+        attributes.push_back(createbtn);
+    }
 
 
-    wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("MainClass"), wxDefaultPosition, wxSize(100, 25), 0);
-    wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, _("MethodName"), wxDefaultPosition, wxSize(100, 25), 0);
-    wxArrayString str;
-    str.Add("1");
-    str.Add("2");
-    str.Add("3");
-    str.Add("4");
-    str.Add("5");
-    str.Add("6");
-    wxChoice *wxCh = new wxChoice(panel_top,wxID_ANY, wxDefaultPosition, wxSize(100, 25),str);
-
-    
-    TextCtrl1->SetMaxSize(wxSize(100, 25));
-    TextCtrl2->SetMaxSize(wxSize(100, 25));
-    wxCh->SetMaxSize(wxSize(100, 25));
-    
-
-    this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
-    this->panelsizer->Add(TextCtrl2, 1, wxEXPAND | wxALL, 10);
-    this->panelsizer->Add(wxCh, 1, wxEXPAND | wxALL, 10);
-
-    panel_top->SetSizerAndFit(panelsizer);
-    
+    this->panel_top->SetSizerAndFit(panelsizer);
+    panel_bottom->SetSizerAndFit(panelsizerbot);
     
 }
 
 void MyFrame::BuildMenu(wxCommandEvent& event){
-    Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(800, 800));
+    Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(400, 400));
     Frame->Show();
 }
 
