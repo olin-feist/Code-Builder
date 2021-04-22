@@ -9,7 +9,7 @@ using namespace std;
 //cpp factory design builder
 vector<string> cppbuilder::factorybuilder(string headname,string methodname,vector<string> classnames){
 
-    string path="defaultcode/cpp/factory/factory.cpp";
+    string path="../defaultcode/cpp/factory/factory.cpp";
     vectorConverter convert;
     //get method for factory
     vector<string> classText = convert.textToVector(path,9,13);
@@ -36,6 +36,7 @@ vector<string> cppbuilder::factorybuilder(string headname,string methodname,vect
 
     //add method name
     filevector=editor.addClassName(filevector,methodname,"$methodname");
+
 
     
     

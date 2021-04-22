@@ -87,8 +87,9 @@ wxIMPLEMENT_APP(MyApp);
 
 
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
-    panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
+    panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(380, 500));
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
+    
 
     wxPanel *panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_bottom->SetBackgroundColour(wxColor(100, 200, 100));
@@ -130,12 +131,13 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size):
     menubar->Append(file, wxT("&File"));
     SetMenuBar(menubar);
 
-    SetClientSize(wxSize(1000,800));
+    
 }
 
 BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
     panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
+    
 
     panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
     panel_bottom->SetMaxSize(wxSize(200, 50));
@@ -162,11 +164,13 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 
     panel_top->SetSizerAndFit(panelsizer);
     panel_bottom->SetSizerAndFit(panelsizerbot);
+    
 
-    SetClientSize(wxSize(400,600));
+    
+
 }
 
-MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(1100, 800));
+MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(800, 800));
 BuildFrame* Frame;
 
 void BuildFrame::amountSelected(wxCommandEvent &event){
@@ -192,14 +196,38 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
 
     this->panel_top->SetSizerAndFit(panelsizer);
     this->Layout();
+    panel_top->Layout();
 }
 
 void BuildFrame::OnFactory(wxCommandEvent &event){
-    cout<<"factory"<<endl;
+    
+    cppbuilder build;
+    string headname;
+    string methodname;
+    headname=((wxTextCtrl*) attributes[0])->GetValue().ToStdString();
+    methodname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
+
+
+
+    vector<string> v;
+    for(int i=3;i<attributes.size();i++){
+        v.push_back(((wxTextCtrl*) attributes[i])->GetValue().ToStdString());
+        cout<<v[i-3]<<endl;
+    }
+    
+    
+
+    writeFile(build.factorybuilder(headname,methodname,v));
+    Close(true);
+
 }
 
 void BuildFrame::OnObserver(wxCommandEvent& event){
-    cout<<"Observer"<<endl;
+    cppbuilder build;
+    string classname;
+    classname=((wxTextCtrl*) attributes[0])->GetValue().ToStdString();
+    writeFile(build.observerbuilder(classname));
+    Close(true);
 }
 
 void MyFrame::OnQuit(wxCommandEvent& event){
@@ -232,7 +260,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         
         
         //add create button
-        createbtn = new wxButton(this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        createbtn = new wxButton(this->panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
         
         
         
@@ -259,7 +287,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), 0);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         
-        createbtn = new wxButton( this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        createbtn = new wxButton( this->panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
         createbtn->SetMaxSize(wxSize(100, 25));
 
         this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
@@ -275,7 +303,9 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
 }
 
 void MyFrame::BuildMenu(wxCommandEvent& event){
+    
     Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(400, 400));
+    Frame->SetMinSize(wxSize(400,400));
     Frame->Show();
 }
 

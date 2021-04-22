@@ -9,7 +9,7 @@ using namespace std;
 //cpp factory design builder
 vector<string> cppbuilder::observerbuilder(string classname){
 
-    string path="defaultcode/cpp/observer/observer.cpp";
+    string path="../defaultcode/cpp/observer/observer.cpp";
     vectorConverter convert;
 
     
