@@ -46,6 +46,7 @@ class BuildFrame : public wxFrame{
         wxPanel* panel_bottom;
         wxBoxSizer *panelsizer;
         wxBoxSizer *panelsizerbot;
+        wxButton *createbtn;
 
     private:
         void OnFactory(wxCommandEvent &event);
@@ -137,7 +138,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
 
     panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
-    panel_bottom->SetMaxSize(wxSize(200, 40));
+    panel_bottom->SetMaxSize(wxSize(200, 50));
     panel_bottom->SetBackgroundColour(wxColor(100, 200, 100));
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
@@ -162,7 +163,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     panel_top->SetSizerAndFit(panelsizer);
     panel_bottom->SetSizerAndFit(panelsizerbot);
 
-    SetClientSize(wxSize(400,400));
+    SetClientSize(wxSize(400,600));
 }
 
 MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(1100, 800));
@@ -190,6 +191,7 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
 
 
     this->panel_top->SetSizerAndFit(panelsizer);
+    this->Layout();
 }
 
 void BuildFrame::OnFactory(wxCommandEvent &event){
@@ -230,7 +232,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         
         
         //add create button
-        wxButton* createbtn = new wxButton(this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        createbtn = new wxButton(this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
         
         
         
@@ -257,20 +259,19 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), 0);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         
-        wxButton* createbtn = new wxButton( this->panel_top, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
+        createbtn = new wxButton( this->panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), 0);
         createbtn->SetMaxSize(wxSize(100, 25));
 
         this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
-        this->panelsizer->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
 
         attributes.push_back(TextCtrl1);
-        attributes.push_back(createbtn);
     }
 
 
-    this->panel_top->SetSizerAndFit(panelsizer);
+    panel_top->SetSizerAndFit(panelsizer);
     panel_bottom->SetSizerAndFit(panelsizerbot);
-    
+    this->Layout();
 }
 
 void MyFrame::BuildMenu(wxCommandEvent& event){
