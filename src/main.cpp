@@ -60,6 +60,7 @@ class BuildFrame : public wxFrame{
         wxDECLARE_EVENT_TABLE();
 };
 
+//enum for event id's
 enum{
     ID_Factory = 1,
     ID_Observer = wxID_HIGHEST + 1,
@@ -68,12 +69,13 @@ enum{
     amountsec = 5
 };
 
+//event table for MyFrame||mainframe
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(newcpp,  MyFrame::BuildMenu)
     EVT_MENU(wxID_EXIT,  MyFrame::OnQuit)
 wxEND_EVENT_TABLE()
 
-
+//event table for buildframe
 wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
     EVT_BUTTON(ID_Factory, BuildFrame::OnFactory)
     EVT_BUTTON(ID_Observer,  BuildFrame::OnObserver)
@@ -85,7 +87,7 @@ wxIMPLEMENT_APP(MyApp);
 
 
 
-
+//constructor for myframe
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
     panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(380, 500));
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
@@ -134,6 +136,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size):
     
 }
 
+//constructor for buildframe
 BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
     panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_top->SetBackgroundColour(wxColor(100, 100, 200));
@@ -173,6 +176,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(800, 800));
 BuildFrame* Frame;
 
+//creates text box based on the number of elements required
 void BuildFrame::amountSelected(wxCommandEvent &event){
     cout<<attributes.size()<<endl;
     if(attributes.size()>3){
@@ -199,6 +203,7 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
     panel_top->Layout();
 }
 
+//create factory c++ on call
 void BuildFrame::OnFactory(wxCommandEvent &event){
     
     cppbuilder build;
@@ -222,6 +227,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
 
 }
 
+//create observer c++ on call
 void BuildFrame::OnObserver(wxCommandEvent& event){
     cppbuilder build;
     string classname;
@@ -230,11 +236,13 @@ void BuildFrame::OnObserver(wxCommandEvent& event){
     Close(true);
 }
 
+//quit frame
 void MyFrame::OnQuit(wxCommandEvent& event){
 
     Close(true);
 }
 
+//method for handling selection of different oop patterns
 void BuildFrame::choiceSelected(wxCommandEvent& event){
     for(wxControl* w: attributes){
         w->Destroy();
@@ -302,6 +310,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
     this->Layout();
 }
 
+//method to build frame for new file creation
 void MyFrame::BuildMenu(wxCommandEvent& event){
     
     Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(400, 400));
@@ -311,7 +320,7 @@ void MyFrame::BuildMenu(wxCommandEvent& event){
 
 
 
-
+//main method for gui
 bool MyApp::OnInit(){
     
     mainframe->Show(true);
