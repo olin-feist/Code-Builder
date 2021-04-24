@@ -8,6 +8,9 @@
 #include <wx/wx.h>
 #endif
 #include <wx/filepicker.h>
+#include <wx/combo.h>
+#include <wx/listctrl.h>
+#include <wx/odcombo.h>
 
 using namespace std;
 
@@ -21,7 +24,40 @@ void writeFile(vector<string> v, string path, string filename){
     file.close();
 }
 
+class wxListViewComboPopup : public wxListView, public wxComboPopup
+{
+public:
+    // Initialize member variables
+    virtual void Init()
+    {
+        m_value = -1;
+    }
+    // Create popup control
+    virtual bool Create(wxWindow* parent)
+    {
+        return wxListView::Create(parent,1,wxPoint(0,0),wxDefaultSize);
+    }
+    // Return pointer to the created control
+    virtual wxWindow *GetControl() { return this; }
+    // Translate string into a list selection
+    virtual void SetStringValue(const wxString& s)
+    {
+        int n = wxListView::FindItem(-1,s);
+        if ( n >= 0 && n < wxListView::GetItemCount() )
+            wxListView::Select(n);
+    }
+    // Get list selection as a string
+    virtual wxString GetStringValue() const
+    {
+        if ( m_value >= 0 )
+        return wxListView::GetItemText(m_value);
+        return wxEmptyString;
+    }
 
+protected:
+    int m_value; // current item index
+
+};
 
 
 class MyApp : public wxApp{
@@ -48,7 +84,7 @@ class BuildFrame : public wxFrame{
         BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
         wxPanel* panel_top;
         wxPanel* panel_bottom;
-        wxBoxSizer *panelsizer;
+        wxGridSizer *panelsizer;
         wxBoxSizer *panelsizerbot;
         wxButton *createbtn;
         wxTextCtrl *filename;
@@ -86,8 +122,8 @@ wxEND_EVENT_TABLE()
 wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
     EVT_BUTTON(ID_Factory, BuildFrame::OnFactory)
     EVT_BUTTON(ID_Observer,  BuildFrame::OnObserver)
-    EVT_CHOICE(choiceevent,BuildFrame::choiceSelected)
-    EVT_CHOICE(amountsec,BuildFrame::amountSelected)
+    EVT_COMBOBOX(choiceevent,BuildFrame::choiceSelected)
+    EVT_COMBOBOX(amountsec,BuildFrame::amountSelected)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(MyApp);
@@ -151,8 +187,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     this->SetBackgroundColour(wxColor(51,51,51));
 
     panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
-    panel_bottom->SetMaxSize(wxSize(200, 50));
-    panel_bottom->SetBackgroundColour(wxColor(30, 30, 30));
+   
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(panel_top, 1, wxEXPAND | wxALL, 10);
@@ -161,18 +196,21 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 
     this->SetSizerAndFit(sizer);
 
-    panelsizer = new wxBoxSizer(wxVERTICAL);
+    panelsizer = new wxGridSizer(2,5,5);
     panelsizerbot = new wxBoxSizer(wxVERTICAL);
 
     wxArrayString str;
     str.Add("Factory");
     str.Add("Observer");
-    wxChoice *wxCh = new wxChoice(panel_top,choiceevent, wxDefaultPosition, wxSize(100, 25),str,wxNO_BORDER);
-    wxCh->SetWindowStyle(wxSIMPLE_BORDER );
+    wxOwnerDrawnComboBox *wxCh = new wxOwnerDrawnComboBox(panel_top,choiceevent, wxT(""),wxDefaultPosition, wxSize(100, 25),str);
+
     wxCh->SetMaxSize(wxSize(100, 25));
+    wxCh->ClearBackground();
+    wxCh->SetTextCtrlStyle(wxSIMPLE_BORDER);
+    wxCh->SetThemeEnabled(false);
+    wxCh->GetTextCtrl()->SetMargins(wxCoord(5),wxCoord(5));
     wxCh->SetBackgroundColour(wxColor(51,51,51));
     wxCh->SetForegroundColour(wxColor(195,195,195));
-    ((wxControl*) wxCh)->SetWindowStyle(wxSIMPLE_BORDER);
     
     filename = new wxTextCtrl(panel_top, wxID_ANY, wxT("filenname"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
     filename->SetMargins(wxPoint(1,10));
@@ -180,7 +218,9 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     filename->SetForegroundColour(wxColor(195,195,195));
 
     filePickerCtrl = new wxDirPickerCtrl(panel_top, wxID_ANY,wxEmptyString,wxDirSelectorPromptStr,wxDefaultPosition, wxSize(100, 25),wxDIRP_USE_TEXTCTRL|wxDIRP_SMALL);
+
     wxTextCtrl *dirtext=filePickerCtrl->GetTextCtrl();
+
     dirtext->SetBackgroundColour(wxColor(51,51,51));
     dirtext->SetForegroundColour(wxColor(195,195,195));
     dirtext->SetWindowStyleFlag(wxSIMPLE_BORDER);
@@ -191,11 +231,29 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 
     filename->SetMaxSize(wxSize(100, 25));
     filePickerCtrl->SetMaxSize(wxSize(250, 25));
-    
-    panelsizer->Add(wxCh, 1, wxEXPAND | wxALL, 10);
-    panelsizer->Add(filename, 1, wxEXPAND | wxALL, 10);
-    panelsizer->Add(filePickerCtrl, 1, wxEXPAND | wxALL, 10);
+    wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Pattern",wxDefaultPosition, wxSize(100, 25));
+    wxStaticText* label2 = new wxStaticText(panel_top, wxID_ANY,"File Name",wxDefaultPosition, wxSize(100, 25));
+    wxStaticText* label3 = new wxStaticText(panel_top, wxID_ANY,"Directory",wxDefaultPosition, wxSize(100, 25));
 
+    label1->SetForegroundColour(wxColor(195,195,195));
+    label2->SetForegroundColour(wxColor(195,195,195));
+    label3->SetForegroundColour(wxColor(195,195,195));
+
+    panelsizer->Add(label1, 0, wxALL, 0);
+    panelsizer->Add(wxCh, 0,  wxALL, 0);
+    panelsizer->Add(label2, 0, wxALL, 0);
+    panelsizer->Add(filename, 0, wxALL, 0);
+    panelsizer->Add(label3, 0, wxALL, 5);
+    panelsizer->Add(filePickerCtrl, -1, wxALL, 0);
+
+
+    createbtn = new wxButton(panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+    createbtn->SetBackgroundColour(wxColor(151,151,151));
+    createbtn->SetForegroundColour(wxColor(195,195,195));
+    panelsizerbot->Add(createbtn, 1, wxALL, 10);  
+        
+
+        createbtn->SetMaxSize(wxSize(100, 25));
     panel_top->SetSizerAndFit(panelsizer);
     panel_bottom->SetSizerAndFit(panelsizerbot);
     
@@ -208,7 +266,7 @@ MyFrame *mainframe = new MyFrame("Code Builder", wxPoint(100, 100), wxSize(800, 
 BuildFrame* Frame;
 
 
-//check is there is user input if not send error
+//check is there is user input if not send error(false)
 bool BuildFrame::validateinput(vector<string> v){
     for(string s: v){
         cout<<s<<endl;
@@ -223,23 +281,29 @@ bool BuildFrame::validateinput(vector<string> v){
 
 //creates text box based on the number of elements required
 void BuildFrame::amountSelected(wxCommandEvent &event){
-    cout<<attributes.size()<<endl;
-    if(attributes.size()>3){
-        for(int i=3;i<attributes.size();i++){
+    
+    if(attributes.size()>6){
+        for(int i=6;i<attributes.size();i++){
             cout<<i<<endl;
             attributes[i]->Destroy();
         }
-        attributes.erase(attributes.begin()+3,attributes.end());
+        attributes.erase(attributes.begin()+6,attributes.end());
     }
     cout<<attributes.size()<<endl;
 
     for(int i=0;i<=event.GetInt();i++){
         
+        wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Factory "+to_string(i+1),wxDefaultPosition, wxSize(100, 25));
+        label1->SetForegroundColour(wxColor(195,195,195));
+
         wxTextCtrl *temp = new wxTextCtrl(this->panel_top, wxID_ANY, _(""), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         temp->SetMaxSize(wxSize(100, 25));
         temp->SetBackgroundColour(wxColor(51,51,51));
         temp->SetForegroundColour(wxColor(195,195,195));
-        this->panelsizer->Add(temp, 1, wxEXPAND | wxALL, 10);
+
+        this->panelsizer->Add(label1, 2, wxALL, 10);
+        this->panelsizer->Add(temp, 2, wxALL, 10);
+        attributes.push_back(label1);
         attributes.push_back(temp);
     }
     
@@ -256,8 +320,8 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
     cppbuilder build;
     string headname;
     string methodname;
-    headname=((wxTextCtrl*) attributes[0])->GetValue().ToStdString();
-    methodname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
+    headname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
+    methodname=((wxTextCtrl*) attributes[3])->GetValue().ToStdString();
     vector<string> test;
     test.push_back(headname);
     test.push_back(methodname);
@@ -267,7 +331,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
     
 
     vector<string> v;
-    for(int i=3;i<attributes.size();i++){
+    for(int i=7;i<attributes.size();i+=2){
         v.push_back(((wxTextCtrl*) attributes[i])->GetValue().ToStdString());
         cout<<v[i-3]<<endl;
     }
@@ -286,7 +350,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
 void BuildFrame::OnObserver(wxCommandEvent& event){
     cppbuilder build;
     string classname;
-    classname=((wxTextCtrl*) attributes[0])->GetValue().ToStdString();
+    classname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
 
     vector<string> test;
     test.push_back(classname);
@@ -317,7 +381,9 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
    
     if(event.GetString()=="Factory"){
         wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MainClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        TextCtrl1->SetMargins(wxPoint(5,5));
         wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MethodName"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        TextCtrl2->SetMargins(wxPoint(5,5));
         wxArrayString str;
         str.Add("1");
         str.Add("2");
@@ -325,20 +391,25 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         str.Add("4");
         str.Add("5");
         str.Add("6");
-        wxChoice *amount = new wxChoice(this->panel_top, amountsec, wxDefaultPosition, wxSize(100, 25),str,wxSIMPLE_BORDER);
-
+        wxOwnerDrawnComboBox  *amount = new wxOwnerDrawnComboBox(panel_top, amountsec, wxT(""), wxDefaultPosition, wxSize(100, 25),str);
+        amount->ClearBackground();
+        amount->SetTextCtrlStyle(wxSIMPLE_BORDER);
+        amount->SetThemeEnabled(false);
+        amount->GetTextCtrl()->SetMargins(wxCoord(5),wxCoord(5));
+        amount->SetBackgroundColour(wxColor(51,51,51));
+        amount->SetForegroundColour(wxColor(195,195,195));
+        
         
         TextCtrl1->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl1->SetForegroundColour(wxColor(195,195,195));
         TextCtrl2->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl2->SetForegroundColour(wxColor(195,195,195));
-        amount->SetBackgroundColour(wxColor(51,51,51));
-        amount->SetForegroundColour(wxColor(195,195,195));
+        
         //add create button
-
-        createbtn = new wxButton(this->panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
-        createbtn->SetBackgroundColour(wxColor(51,51,51));
-        createbtn->SetForegroundColour(wxColor(195,195,195));
+        createbtn->Destroy();
+        createbtn = new wxButton(this->panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetForegroundColour(wxColor(255,255,255));
         
         
 
@@ -347,15 +418,29 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         TextCtrl2->SetMaxSize(wxSize(100, 25));
         amount->SetMaxSize(wxSize(100, 25));
         
+        wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Main Class",wxDefaultPosition, wxSize(100, 25));
+        wxStaticText* label2 = new wxStaticText(panel_top, wxID_ANY,"Method Name",wxDefaultPosition, wxSize(100, 25));
+        wxStaticText* label3 = new wxStaticText(panel_top, wxID_ANY,"Number Factories",wxDefaultPosition, wxSize(100, 25));
         
 
-        this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
-        this->panelsizer->Add(TextCtrl2, 1, wxEXPAND | wxALL, 10);
-        this->panelsizer->Add(amount, 1, wxEXPAND | wxALL, 10);
+        label1->SetForegroundColour(wxColor(195,195,195));
+        label2->SetForegroundColour(wxColor(195,195,195));
+        label3->SetForegroundColour(wxColor(195,195,195));
+        
+        this->panelsizer->Add(label1, 2, wxALL, 10);
+        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
+        this->panelsizer->Add(label2, 2, wxALL, 10);
+        this->panelsizer->Add(TextCtrl2, 2, wxALL, 10);
+        this->panelsizer->Add(label3, 2, wxALL, 10);
+        this->panelsizer->Add(amount, 2, wxALL, 10);
+
         this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
 
+        attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
+        attributes.push_back(label2);
         attributes.push_back(TextCtrl2);
+        attributes.push_back(label3);
         attributes.push_back(amount);
         
         
@@ -364,18 +449,25 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         TextCtrl1->SetBackgroundColour(wxColor(51,51,51));
-        TextCtrl1->SetForegroundColour(wxColor(195,195,195));
+        TextCtrl1->SetForegroundColour(wxColor(255,255,255));
 
-        createbtn = new wxButton( this->panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
+        createbtn->Destroy();
+        createbtn = new wxButton( this->panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(51,51,51));
-        createbtn->SetForegroundColour(wxColor(195,195,195));
-        
-        
-        this->panelsizer->Add(TextCtrl1, 1, wxEXPAND | wxALL, 10);
+        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetForegroundColour(wxColor(255,255,255));
+
+        wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Subject Class",wxDefaultPosition, wxSize(100, 25));
+        label1->SetForegroundColour(wxColor(195,195,195));
+
+        this->panelsizer->Add(label1, 2, wxALL, 10);
+        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
+
         this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
 
+        attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
+
     }
 
 
@@ -387,8 +479,8 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
 //method to build frame for new file creation
 void MyFrame::BuildMenu(wxCommandEvent& event){
     
-    Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(400, 400));
-    Frame->SetMinSize(wxSize(400,400));
+    Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(300, 300));
+    Frame->SetMinSize(wxSize(300,300));
     Frame->Show();
 }
 
