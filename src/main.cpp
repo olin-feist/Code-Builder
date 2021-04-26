@@ -15,7 +15,7 @@
 using namespace std;
 
 void writeFile(vector<string> v, string path, string filename){
-    cout<<path<<endl;
+    
     ofstream file(path+"\\"+filename+".cpp");
 
     for(string l:v){
@@ -23,42 +23,6 @@ void writeFile(vector<string> v, string path, string filename){
     }
     file.close();
 }
-
-class wxListViewComboPopup : public wxListView, public wxComboPopup
-{
-public:
-    // Initialize member variables
-    virtual void Init()
-    {
-        m_value = -1;
-    }
-    // Create popup control
-    virtual bool Create(wxWindow* parent)
-    {
-        return wxListView::Create(parent,1,wxPoint(0,0),wxDefaultSize);
-    }
-    // Return pointer to the created control
-    virtual wxWindow *GetControl() { return this; }
-    // Translate string into a list selection
-    virtual void SetStringValue(const wxString& s)
-    {
-        int n = wxListView::FindItem(-1,s);
-        if ( n >= 0 && n < wxListView::GetItemCount() )
-            wxListView::Select(n);
-    }
-    // Get list selection as a string
-    virtual wxString GetStringValue() const
-    {
-        if ( m_value >= 0 )
-        return wxListView::GetItemText(m_value);
-        return wxEmptyString;
-    }
-
-protected:
-    int m_value; // current item index
-
-};
-
 
 class MyApp : public wxApp{
     public:
@@ -132,12 +96,12 @@ wxIMPLEMENT_APP(MyApp);
 
 //constructor for myframe
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
+    this->SetBackgroundColour(wxColor(51,51,51));
     panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(380, 500));
-    panel_top->SetBackgroundColour(wxColor(100, 100, 200));
-    
+    panel_top->SetBackgroundColour(wxColor(30, 30, 30));
 
     wxPanel *panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
-    panel_bottom->SetBackgroundColour(wxColor(100, 200, 100));
+    panel_bottom->SetBackgroundColour(wxColor(30, 30, 30));
 
    
 
@@ -213,7 +177,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     wxCh->SetForegroundColour(wxColor(195,195,195));
     
     filename = new wxTextCtrl(panel_top, wxID_ANY, wxT("filenname"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
-    filename->SetMargins(wxPoint(1,10));
+    filename->SetMargins(wxPoint(5,5));
     filename->SetBackgroundColour(wxColor(51,51,51));
     filename->SetForegroundColour(wxColor(195,195,195));
 
@@ -239,12 +203,12 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     label2->SetForegroundColour(wxColor(195,195,195));
     label3->SetForegroundColour(wxColor(195,195,195));
 
-    panelsizer->Add(label1, 0, wxALL, 0);
-    panelsizer->Add(wxCh, 0,  wxALL, 0);
-    panelsizer->Add(label2, 0, wxALL, 0);
-    panelsizer->Add(filename, 0, wxALL, 0);
-    panelsizer->Add(label3, 0, wxALL, 5);
-    panelsizer->Add(filePickerCtrl, -1, wxALL, 0);
+    panelsizer->Add(label1, 2, wxALL, 10);
+    panelsizer->Add(wxCh, 2, wxALL, 10);
+    panelsizer->Add(label2, 2, wxALL, 10);
+    panelsizer->Add(filename, 2, wxALL, 10);
+    panelsizer->Add(label3, 2, wxALL, 10);
+    panelsizer->Add(filePickerCtrl, 2, wxALL, 10);
 
 
     createbtn = new wxButton(panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
@@ -268,8 +232,9 @@ BuildFrame* Frame;
 
 //check is there is user input if not send error(false)
 bool BuildFrame::validateinput(vector<string> v){
+   
     for(string s: v){
-        cout<<s<<endl;
+       
         if(s.length()==0||s.empty()){
             wxMessageDialog *dial = new wxMessageDialog(NULL, wxT("Invalid Input"), wxT("Error"), wxOK | wxICON_ERROR);
             dial->ShowModal();
@@ -284,12 +249,12 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
     
     if(attributes.size()>6){
         for(int i=6;i<attributes.size();i++){
-            cout<<i<<endl;
+            
             attributes[i]->Destroy();
         }
         attributes.erase(attributes.begin()+6,attributes.end());
     }
-    cout<<attributes.size()<<endl;
+    
 
     for(int i=0;i<=event.GetInt();i++){
         
@@ -332,11 +297,12 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
 
     vector<string> v;
     for(int i=7;i<attributes.size();i+=2){
+       
         v.push_back(((wxTextCtrl*) attributes[i])->GetValue().ToStdString());
-        cout<<v[i-3]<<endl;
+       
     }
     
-    test.insert(test.end(),v.begin(),v.end());
+    //test.insert(test.end(),v.begin(),v.end());
     if(validateinput(test)){
         writeFile(build.factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
@@ -372,7 +338,7 @@ void MyFrame::OnQuit(wxCommandEvent& event){
 void BuildFrame::choiceSelected(wxCommandEvent& event){
     for(wxControl* w: attributes){
         w->Destroy();
-        cout<<"test"<<endl;
+       
     }
     attributes.clear();
     

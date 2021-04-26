@@ -1,8 +1,8 @@
 # Code-Builder
 
 ## To Build From Command Line
-> - cmake -G "MinGW Makefiles" -B..\build
-> - cmake --build ..\build
+> - cmake -G "MinGW Makefiles" -B./build
+> - cmake --build build
 
 ## TO Do List
 
