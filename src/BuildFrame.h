@@ -10,6 +10,8 @@
 #include <wx/listctrl.h>
 #include <wx/odcombo.h>
 
+using namespace std;
+
 class BuildFrame : public wxFrame{
     public:
         BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size);

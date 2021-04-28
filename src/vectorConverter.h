@@ -3,9 +3,9 @@
 #include <fstream>
 using namespace std;
 
-class vectorConverter{
-    public:
+namespace vectorConverter{
+    
         vector<string> textToVector(string path);
         vector<string> textToVector(string path, int low, int high);
         
-};
+}

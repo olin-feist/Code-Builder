@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "cppbuilder.h"
 #include <fstream>
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
@@ -12,6 +11,7 @@
 #include <wx/odcombo.h>
 
 
+#include "cppbuilder.h"
 #include "BuildFrame.h"
 
 //event table for buildframe
@@ -157,7 +157,7 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
 //create factory c++ on call
 void BuildFrame::OnFactory(wxCommandEvent &event){
     
-    cppbuilder build;
+    
     string headname;
     string methodname;
     headname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
@@ -179,7 +179,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
     
     //test.insert(test.end(),v.begin(),v.end());
     if(validateinput(test)){
-        build.writeFile(build.factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        cppbuilder::writeFile(cppbuilder::factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
     
@@ -189,7 +189,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
 
 //create observer c++ on call
 void BuildFrame::OnObserver(wxCommandEvent& event){
-    cppbuilder build;
+    
     string classname;
     classname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
 
@@ -198,7 +198,7 @@ void BuildFrame::OnObserver(wxCommandEvent& event){
     test.push_back(filePickerCtrl->GetPath().ToStdString());
     test.push_back(filename->GetValue().ToStdString());
     if(validateinput(test)){
-        build.writeFile(build.observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        cppbuilder::writeFile( cppbuilder::observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 }

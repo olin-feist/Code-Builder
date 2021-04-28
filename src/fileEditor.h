@@ -3,8 +3,8 @@
 #include <fstream>
 using namespace std;
 
-class fileEditor{
-    public:
+namespace fileEditor{
+    
         vector<string> addClassName(vector<string> file, string name, string flag);
         vector<string> add(vector<string> file, vector<string> values);
         

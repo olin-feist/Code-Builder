@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "cppbuilder.h"
 #include <fstream>
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
@@ -13,7 +12,7 @@
 
 #include "MainFrame.h"
 #include "BuildFrame.h"
-
+#include "cppbuilder.h"
 
 //event table for MainFrame||mainframe
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
