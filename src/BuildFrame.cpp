@@ -14,6 +14,14 @@
 #include "cppbuilder.h"
 #include "BuildFrame.h"
 
+//enum for event id's
+enum{
+    ID_Factory = 1,
+    ID_Observer = 2,
+    choiceevent = 3,
+    amountsec = 4
+};
+
 //event table for buildframe
 wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
     EVT_BUTTON(ID_Factory, BuildFrame::OnFactory)

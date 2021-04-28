@@ -15,7 +15,7 @@ class MainFrame : public wxFrame{
         MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
         wxPanel* panel_left;
         wxPanel* panel_right;
-        
+        wxTextCtrl* textedit=new wxTextCtrl();
 
     private:
        
@@ -26,8 +26,4 @@ class MainFrame : public wxFrame{
         wxDECLARE_EVENT_TABLE();
 };
 
-//enum for event id's
-enum{
-    newcpp = 1,
-};
 

@@ -36,11 +36,4 @@ class BuildFrame : public wxFrame{
         wxDECLARE_EVENT_TABLE();
 };
 
-//enum for event id's
-enum{
-    ID_Factory = 1,
-    ID_Observer = wxID_HIGHEST + 1,
-    choiceevent = wxID_HIGHEST + 1,
-    amountsec = wxID_HIGHEST + 1
-};
 

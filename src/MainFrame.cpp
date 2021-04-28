@@ -13,6 +13,10 @@
 #include "MainFrame.h"
 #include "BuildFrame.h"
 #include "cppbuilder.h"
+//enum for event id's
+enum{
+    newcpp = 1,
+};
 
 //event table for MainFrame||mainframe
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -23,21 +27,23 @@ wxEND_EVENT_TABLE()
 
 
 MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
+   
     this->SetBackgroundColour(wxColor(51,51,51));
-    panel_left = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(380, 500));
+    panel_left = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     panel_left->SetBackgroundColour(wxColor(30, 30, 30));
+    
 
-    panel_right = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
+    panel_right = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     panel_right->SetBackgroundColour(wxColor(30, 30, 30));
-
+    
    
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
-    sizer->Add(panel_left, 1, wxEXPAND | wxALL, 10);
-    sizer->Add(panel_right, 1, wxEXPAND | wxALL, 10);
+    sizer->Add(panel_left, 1,wxALL |wxEXPAND, 10);
+    sizer->Add(panel_right, 5, wxALL | wxEXPAND, 10);
 
     this->SetSizerAndFit(sizer);
-
+    
     wxBoxSizer *panelsizer = new wxBoxSizer(wxVERTICAL);
 
 
@@ -67,7 +73,9 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     menubar->Append(file, wxT("&File"));
     SetMenuBar(menubar);
 
-    
+    SetMinClientSize(wxSize(800,800));
+    SetMinSize(wxSize(800,800));
+    sizer->SetMinSize(wxSize(800,800));
 }
 
 //method to build frame for new file creation
@@ -84,12 +92,17 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     wxFileDialog dialog(this, wxEmptyString, wxEmptyString, wxEmptyString,wxFileSelectorDefaultWildcardStr); 
     dialog.ShowModal();
     wxString filename = dialog.GetPath();
-    
-    wxTextCtrl* textedit = new wxTextCtrl(panel_right, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(200,200), 
+    textedit->Destroy();
+    textedit = new wxTextCtrl(panel_right, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(200,200), 
     wxVSCROLL | wxHSCROLL | wxBORDER_NONE | wxWANTS_CHARS|wxTE_MULTILINE);
     textedit->SetBackgroundColour(wxColor(30, 30, 30));
     textedit->SetForegroundColour(wxColor(195,195,195));
     textedit->LoadFile(filename,wxTEXT_TYPE_ANY);
+
+    //set font size
+    wxFont font = textedit->GetFont();
+    font.SetPointSize(font.GetPointSize() + 4);
+    textedit->SetFont(font);
 
 
     wxBoxSizer * sizer = new wxBoxSizer(wxVERTICAL);
