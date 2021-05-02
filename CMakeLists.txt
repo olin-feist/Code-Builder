@@ -1,9 +1,9 @@
 project(CodeBuilder)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.15)
 aux_source_directory(./src/ SRC_LIST)
 
 set(wxWidgets_CONFIGURATION mswu)
-find_package(wxWidgets REQUIRED COMPONENTS net core base)
+find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})

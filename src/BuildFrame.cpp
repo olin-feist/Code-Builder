@@ -68,7 +68,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     filename->SetBackgroundColour(wxColor(51,51,51));
     filename->SetForegroundColour(wxColor(195,195,195));
 
-    filePickerCtrl = new wxDirPickerCtrl(panel_top, wxID_ANY,wxEmptyString,wxDirSelectorPromptStr,wxDefaultPosition, wxSize(100, 25),wxDIRP_USE_TEXTCTRL|wxDIRP_SMALL);
+    filePickerCtrl = new wxDirPickerCtrl(panel_top, wxID_ANY,wxEmptyString,wxDirSelectorPromptStr,wxDefaultPosition, wxSize(100, 25),wxDIRP_SMALL | wxDIRP_USE_TEXTCTRL);
 
     wxTextCtrl *dirtext=filePickerCtrl->GetTextCtrl();
 
@@ -78,7 +78,8 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     wxButton *btn = (wxButton*) filePickerCtrl->GetPickerCtrl();
     btn->SetBackgroundColour(wxColor(51,51,51));
     btn->SetForegroundColour(wxColor(195,195,195));
-    btn->SetWindowStyleFlag(wxSIMPLE_BORDER);
+    btn->SetWindowStyleFlag(wxBORDER_NONE);
+    btn->SetMaxSize(wxSize(25,25));
 
     filename->SetMaxSize(wxSize(100, 25));
     filePickerCtrl->SetMaxSize(wxSize(250, 25));

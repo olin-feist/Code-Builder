@@ -5,11 +5,8 @@
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
-#include <wx/filepicker.h>
-#include <wx/combo.h>
-#include <wx/listctrl.h>
-#include <wx/odcombo.h>
-
+#include <wx/wx.h>
+#include <wx/dirctrl.h>
 #include "MainFrame.h"
 #include "BuildFrame.h"
 #include "cppbuilder.h"
@@ -40,16 +37,39 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(panel_left, 1,wxALL |wxEXPAND, 10);
-    sizer->Add(panel_right, 5, wxALL | wxEXPAND, 10);
+    sizer->Add(panel_right,8, wxALL | wxEXPAND, 10);
 
     this->SetSizerAndFit(sizer);
     
     wxBoxSizer *panelsizer = new wxBoxSizer(wxVERTICAL);
 
+    wxTreeCtrl * 	filetree = new wxTreeCtrl(
+        panel_left,
+        wxID_ANY,
+        wxDefaultPosition,
+        wxDefaultSize,
+        wxTR_DEFAULT_STYLE
+    );
 
+    wxTreeItemId rootId=filetree->AddRoot(wxT("test"));
+    filetree->AppendItem(rootId, "Node 1");
+    wxTreeItemId child2Id = filetree->AppendItem(rootId, "Node 2");
+    filetree->AppendItem(child2Id, "Child of node 2");
+    filetree->AppendItem(rootId, "Node 3");
 
+    filetree->SetBackgroundColour(wxColor(30, 30, 30));
+    filetree->SetForegroundColour(wxColor(195,195,195));
+    filetree->SetWindowStyleFlag(wxNO_BORDER);
+    panelsizer->Add(filetree, 1, wxGROW | (wxALL & ~wxRIGHT), 10);
+
+    
+    
+   
+
+    
     panel_left->SetSizerAndFit(panelsizer);
     
+    //menubar
     wxMenuBar *menubar;
     wxMenu *file;
     wxMenuItem *quit;
@@ -87,7 +107,7 @@ void MainFrame::BuildMenu(wxCommandEvent& event){
 }
 
 void MainFrame::OpenFile(wxCommandEvent &event){
-    cout<<"test"<<endl;
+    
 
     wxFileDialog dialog(this, wxEmptyString, wxEmptyString, wxEmptyString,wxFileSelectorDefaultWildcardStr); 
     dialog.ShowModal();

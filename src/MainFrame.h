@@ -16,6 +16,7 @@ class MainFrame : public wxFrame{
         wxPanel* panel_left;
         wxPanel* panel_right;
         wxTextCtrl* textedit=new wxTextCtrl();
+        wxTreeCtrl* filetree;
 
     private:
        
