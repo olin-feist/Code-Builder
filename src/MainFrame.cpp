@@ -7,9 +7,11 @@
 #endif
 #include <wx/wx.h>
 #include <wx/dirctrl.h>
+
 #include "MainFrame.h"
 #include "BuildFrame.h"
 #include "cppbuilder.h"
+#include "fileEditor.h"
 //enum for event id's
 enum{
     newcpp = 1,
@@ -41,33 +43,13 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     this->SetSizerAndFit(sizer);
     
-    wxBoxSizer *panelsizer = new wxBoxSizer(wxVERTICAL);
-
-    wxTreeCtrl * 	filetree = new wxTreeCtrl(
-        panel_left,
-        wxID_ANY,
-        wxDefaultPosition,
-        wxDefaultSize,
-        wxTR_DEFAULT_STYLE
-    );
-
-    wxTreeItemId rootId=filetree->AddRoot(wxT("test"));
-    filetree->AppendItem(rootId, "Node 1");
-    wxTreeItemId child2Id = filetree->AppendItem(rootId, "Node 2");
-    filetree->AppendItem(child2Id, "Child of node 2");
-    filetree->AppendItem(rootId, "Node 3");
-
-    filetree->SetBackgroundColour(wxColor(30, 30, 30));
-    filetree->SetForegroundColour(wxColor(195,195,195));
-    filetree->SetWindowStyleFlag(wxNO_BORDER);
-    panelsizer->Add(filetree, 1, wxGROW | (wxALL & ~wxRIGHT), 10);
-
-    
     
    
-
-    
+    panelsizer = new wxBoxSizer(wxVERTICAL);
     panel_left->SetSizerAndFit(panelsizer);
+    
+    
+    
     
     //menubar
     wxMenuBar *menubar;
@@ -124,11 +106,41 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     font.SetPointSize(font.GetPointSize() + 4);
     textedit->SetFont(font);
 
-
+    //file tree
     wxBoxSizer * sizer = new wxBoxSizer(wxVERTICAL);
     sizer -> Add(textedit, 1, wxALL|wxEXPAND);
     panel_right -> SetSizer(sizer);
+
+    filetree->Destroy();
+
+    filetree = new wxTreeCtrl(
+        panel_left,
+        wxID_ANY,
+        wxDefaultPosition,
+        wxDefaultSize,
+        wxTR_DEFAULT_STYLE
+    );
+    filetree=fileEditor::getClassTree(string(filename.mb_str()),filetree);
+
+
+   /* wxTreeItemId rootId=filetree->AddRoot(wxT("test"));
+    filetree->AppendItem(rootId, "Node 1");
+    wxTreeItemId child2Id = filetree->AppendItem(rootId, "Node 2");
+    filetree->AppendItem(child2Id, "Child of node 2");
+    filetree->AppendItem(rootId, "Node 3");*/
+
+    filetree->SetBackgroundColour(wxColor(30, 30, 30));
+    filetree->SetForegroundColour(wxColor(195,195,195));
+    filetree->SetWindowStyleFlag(wxNO_BORDER);
+    
+    panelsizer->Add(filetree, 1, wxALL|wxEXPAND, 10);
+    panel_left->SetSizerAndFit(panelsizer);
+
+    
+    
     panel_right->Layout();
+    this->Layout();
+    this->Refresh();
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event){
