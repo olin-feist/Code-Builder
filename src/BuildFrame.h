@@ -26,6 +26,8 @@ class BuildFrame : public wxFrame{
     private:
         void OnFactory(wxCommandEvent &event);
         void OnObserver(wxCommandEvent &event);
+        void OnCommand(wxCommandEvent &event);
+        void OnSingleton(wxCommandEvent &event);
 
         void choiceSelected(wxCommandEvent& event);
         void amountSelected(wxCommandEvent& event);

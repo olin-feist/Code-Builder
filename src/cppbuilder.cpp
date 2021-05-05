@@ -38,7 +38,7 @@ vector<string> cppbuilder::observerbuilder(string classname){
 //cpp singleton builder
 vector<string> cppbuilder::singletonbuilder(string name){
 
-    string path="defaultcode/cpp/singleton/singleton.cpp";
+    string path="../defaultcode/cpp/singleton/singleton.cpp";
     
     vector<string> file = vectorConverter::textToVector(path);
 
@@ -87,7 +87,7 @@ vector<string> cppbuilder::factorybuilder(string headname,string methodname,vect
 //cpp command design builder
 vector<string> cppbuilder::commandbuilder(string refclass,string invokerclass,vector<string> classnames){
 
-    string path="defaultcode/cpp/command/command.cpp";
+    string path="../defaultcode/cpp/command/command.cpp";
     
 
     
@@ -124,6 +124,7 @@ vector<string> cppbuilder::commandbuilder(string refclass,string invokerclass,ve
     return filevector;
 }
 
+//create .cpp file
 void cppbuilder::writeFile(vector<string> v, string path, string filename){
     ofstream file(path+"\\"+filename+".cpp");
 
