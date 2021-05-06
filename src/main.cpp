@@ -37,6 +37,7 @@ MainFrame *mainframe = new MainFrame("Code Builder", wxPoint(100, 100), wxSize(8
 
 //main method for gui
 bool MyApp::OnInit(){
+    
     //FreeConsole();
     mainframe->Show(true);
     

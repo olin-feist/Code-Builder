@@ -39,13 +39,13 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(panel_left, 1,wxALL |wxEXPAND, 10);
-    sizer->Add(panel_right,8, wxALL | wxEXPAND, 10);
+    sizer->Add(panel_right,6, wxALL | wxEXPAND, 10);
 
     this->SetSizerAndFit(sizer);
     
     
    
-    panelsizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *panelsizer = new wxBoxSizer(wxVERTICAL);
     panel_left->SetSizerAndFit(panelsizer);
     
     
@@ -93,6 +93,9 @@ void MainFrame::OpenFile(wxCommandEvent &event){
 
     wxFileDialog dialog(this, wxEmptyString, wxEmptyString, wxEmptyString,wxFileSelectorDefaultWildcardStr); 
     dialog.ShowModal();
+    if(!(dialog.GetPath().IsNull())){
+
+    
     wxString filename = dialog.GetPath();
     textedit->Destroy();
     textedit = new wxTextCtrl(panel_right, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(200,200), 
@@ -123,24 +126,18 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     filetree=fileEditor::getClassTree(string(filename.mb_str()),filetree);
 
 
-   /* wxTreeItemId rootId=filetree->AddRoot(wxT("test"));
-    filetree->AppendItem(rootId, "Node 1");
-    wxTreeItemId child2Id = filetree->AppendItem(rootId, "Node 2");
-    filetree->AppendItem(child2Id, "Child of node 2");
-    filetree->AppendItem(rootId, "Node 3");*/
-
     filetree->SetBackgroundColour(wxColor(30, 30, 30));
     filetree->SetForegroundColour(wxColor(195,195,195));
     filetree->SetWindowStyleFlag(wxNO_BORDER);
     
-    panelsizer->Add(filetree, 1, wxALL|wxEXPAND, 10);
-    panel_left->SetSizerAndFit(panelsizer);
+    panel_left->GetSizer()->Add(filetree, 1, wxALL|wxEXPAND, 10);
+    
 
     
-    
-    panel_right->Layout();
     this->Layout();
-    this->Refresh();
+    panel_right->Layout();
+
+    }
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event){

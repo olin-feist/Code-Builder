@@ -22,7 +22,7 @@ class MainFrame : public wxFrame{
         wxPanel* panel_right;
         wxTextCtrl* textedit=new wxTextCtrl();
         wxTreeCtrl* filetree=new wxTreeCtrl();
-        wxBoxSizer *panelsizer;
+        
         void OnQuit(wxCommandEvent &event);
         void BuildMenu(wxCommandEvent &event);
         void OpenFile(wxCommandEvent &event);

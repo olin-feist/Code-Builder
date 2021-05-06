@@ -10,20 +10,24 @@
 #include <wx/listctrl.h>
 #include <wx/odcombo.h>
 
+
 using namespace std;
 
 class BuildFrame : public wxFrame{
     public:
         BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+
+    private:
         wxPanel* panel_top;
         wxPanel* panel_bottom;
-        wxGridSizer *panelsizer;
-        wxBoxSizer *panelsizerbot;
+        wxPanel* panel_right;
+        wxPanel* panel_left;
         wxButton *createbtn;
         wxTextCtrl *filename;
         wxDirPickerCtrl *filePickerCtrl;
+       
 
-    private:
         void OnFactory(wxCommandEvent &event);
         void OnObserver(wxCommandEvent &event);
         void OnCommand(wxCommandEvent &event);

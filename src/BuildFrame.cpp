@@ -9,10 +9,12 @@
 #include <wx/combo.h>
 #include <wx/listctrl.h>
 #include <wx/odcombo.h>
-
+#include <wx/stc/stc.h>
 
 #include "cppbuilder.h"
 #include "BuildFrame.h"
+
+
 
 //enum for event id's
 enum{
@@ -21,7 +23,8 @@ enum{
     choiceevent = 3,
     amountsec = 4,
     ID_Command = 5,
-    ID_Singleton=6
+    ID_Singleton=6,
+    ID_Desc=7
 };
 
 //event table for buildframe
@@ -34,31 +37,78 @@ wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
     EVT_COMBOBOX(amountsec,BuildFrame::amountSelected)
 wxEND_EVENT_TABLE()
 
+    
+
 //constructor for buildframe
 BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
+    panel_right = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
+    panel_right->SetBackgroundColour(wxColor(30, 30, 30));
+    wxBoxSizer *sizerright = new wxBoxSizer(wxVERTICAL);
+    
+    
+    wxStaticText* desc = new wxStaticText(panel_right, wxID_ANY,"C++ Builder",wxDefaultPosition, wxDefaultSize);
+    wxFont font = desc->GetFont();
+    font.SetPointSize(font.GetPointSize() + 10);
+    desc->SetFont(font);
+
+    desc->SetForegroundColour(wxColor(14,99,156));
+
+    wxStaticText* desc1 = new wxStaticText(panel_right, wxID_ANY,"Select design pattern from dropdown\n menu and fill in fields to create .cpp file",wxDefaultPosition, wxDefaultSize,wxTE_MULTILINE);
+    desc1->SetForegroundColour(wxColor(255,255,255));
+    font = desc1->GetFont();
+    font.SetPointSize(font.GetPointSize() + 1);
+    desc1->SetFont(font);
+    wxStaticText* desc2 = new wxStaticText(panel_right, wxID_ANY,"Current Patterns:\n- Observer\n- Singleton\n- Factory\n- Command",wxDefaultPosition, wxDefaultSize);
+    //desc2->Wrap(10);
+    desc2->SetForegroundColour(wxColor(255,255,255));
+    font = desc2->GetFont();
+    font.SetPointSize(font.GetPointSize() + 1);
+    desc2->SetFont(font);
+
+
+  
+    desc->SetBackgroundColour(wxColor(30, 30, 30));
+    sizerright->Add(desc, 0.5, wxEXPAND | wxALL, 10);
+    sizerright->Add(desc1, 0.5, wxEXPAND | wxALL, 10);
+    sizerright->Add(desc2, 0.5, wxEXPAND | wxALL, 10);
+    
+    panel_right->SetSizerAndFit(sizerright);
+    
+    panel_left = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
+    panel_left->SetBackgroundColour(wxColor(30, 30, 30));
+ 
+
+    wxBoxSizer *sizermain = new wxBoxSizer(wxHORIZONTAL);
+    sizermain->Add(panel_left, 1, wxEXPAND | wxALL, 10);
+    sizermain->Add(panel_right, 1, wxEXPAND | wxALL, 10);
+    this->SetSizerAndFit(sizermain);
+
     //create top panel that holds user input to build class
-    panel_top = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
+    panel_top = new wxPanel(panel_left, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_top->SetBackgroundColour(wxColor(30, 30, 30));
     
     //set frame color
     this->SetBackgroundColour(wxColor(51,51,51));
 
     //panel botton for creat btn
-    panel_bottom = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
+    panel_bottom = new wxPanel(panel_left, wxID_ANY, wxDefaultPosition, wxSize(100, 30));
    
     //sizer for frame
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-    //add panels to frame sizer
-    sizer->Add(panel_top, 1, wxEXPAND | wxALL, 10);
-    sizer->Add(panel_bottom, 1, wxEXPAND | wxALL, 10);
-    
     //set sizer
-    this->SetSizerAndFit(sizer);
+    panel_left->SetSizerAndFit(sizer);
+    //add panels to frame sizer
+    panel_left->GetSizer()->Add(panel_top, 0, wxEXPAND | wxALL, 10);
+    panel_left->GetSizer()->Add(panel_bottom, 0, wxALL, 10);
+    
+   
 
     //create panel sizers for top and bot panels
-    panelsizer = new wxGridSizer(2,5,5);
-    panelsizerbot = new wxBoxSizer(wxVERTICAL);
-
+    wxGridSizer *panelsizer = new wxGridSizer(2,5,5);
+    wxBoxSizer *panelsizerbot= new wxBoxSizer(wxVERTICAL);
+    panel_top->SetSizerAndFit(panelsizer);
+    panel_bottom->SetSizerAndFit(panelsizerbot);
+    
     //create drop down menu for selecting design types
     wxArrayString str;
     str.Add("Factory");
@@ -109,28 +159,32 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
     label3->SetForegroundColour(wxColor(195,195,195));
 
     //add elements
-    panelsizer->Add(label1, 2, wxALL, 10);
-    panelsizer->Add(wxCh, 2, wxALL, 10);
-    panelsizer->Add(label2, 2, wxALL, 10);
-    panelsizer->Add(filename, 2, wxALL, 10);
-    panelsizer->Add(label3, 2, wxALL, 10);
-    panelsizer->Add(filePickerCtrl, 2, wxALL, 10);
+    panel_top->GetSizer()->Add(label1, 0, wxALL, 10);
+    panel_top->GetSizer()->Add(wxCh, 0, wxALL, 10);
+    panel_top->GetSizer()->Add(label2, 0, wxALL, 10);
+    panel_top->GetSizer()->Add(filename, 0, wxALL, 10);
+    panel_top->GetSizer()->Add(label3, 0, wxALL, 10);
+    panel_top->GetSizer()->Add(filePickerCtrl, 0, wxALL, 10);
 
     //creat locked creat button
     createbtn = new wxButton(panel_bottom, wxID_ANY, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
     createbtn->SetBackgroundColour(wxColor(151,151,151));
     createbtn->SetForegroundColour(wxColor(195,195,195));
-    panelsizerbot->Add(createbtn, 1, wxALL, 10);  
+    panel_bottom->GetSizer()->Add(createbtn, 1, wxALL, 10);  
         
     
     createbtn->SetMaxSize(wxSize(100, 25));
     //set sizers
-    panel_top->SetSizerAndFit(panelsizer);
-    panel_bottom->SetSizerAndFit(panelsizerbot);
+    panel_top->SetSizerAndFit(panel_top->GetSizer());
+    panel_bottom->SetSizerAndFit(panel_bottom->GetSizer());
     
 
     
+    panel_left->GetSizer()->SetSizeHints(panel_left);
+    panel_right->GetSizer()->SetSizeHints(panel_right);
+    this->GetSizer()->SetSizeHints(this);
 
+    
 }
 
 //check is there is user input, if not send error(false)
@@ -165,23 +219,29 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
         label1->SetForegroundColour(wxColor(195,195,195));
 
         //text input
-        wxTextCtrl *temp = new wxTextCtrl(this->panel_top, wxID_ANY, _(""), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        wxTextCtrl *temp = new wxTextCtrl(panel_top, wxID_ANY, _(""), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         temp->SetMaxSize(wxSize(100, 25));
         temp->SetBackgroundColour(wxColor(51,51,51));
         temp->SetForegroundColour(wxColor(195,195,195));
 
         //add to sizer and push to list
-        this->panelsizer->Add(label1, 2, wxALL, 10);
-        this->panelsizer->Add(temp, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(label1, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(temp, 2, wxALL, 10);
         attributes.push_back(label1);
         attributes.push_back(temp);
     }
     
 
     //layout reset
-    this->panel_top->SetSizerAndFit(panelsizer);
-    this->Layout();
+    panel_top->SetSizerAndFit(panel_top->GetSizer());
+    
     panel_top->Layout();
+    this->Layout();
+    this->Refresh();
+    panel_right->Layout();
+    panel_left->GetSizer()->SetSizeHints(panel_left);
+    panel_right->GetSizer()->SetSizeHints(panel_right);
+    this->GetSizer()->SetSizeHints(this);
 }
 
 //create factory c++ on call
@@ -298,9 +358,9 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
 
     //factory
     if(event.GetString()=="Factory"){
-        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MainClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, wxT("MainClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         TextCtrl1->SetMargins(wxPoint(5,5));
-        wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, wxT("MethodName"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        wxTextCtrl *TextCtrl2 = new wxTextCtrl(panel_top, wxID_ANY, wxT("MethodName"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         TextCtrl2->SetMargins(wxPoint(5,5));
         wxArrayString str;
         str.Add("1");
@@ -325,7 +385,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         
         //add create button
         createbtn->Destroy();
-        createbtn = new wxButton(this->panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+        createbtn = new wxButton(panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetBackgroundColour(wxColor(14,99,156));
         createbtn->SetForegroundColour(wxColor(255,255,255));
         
@@ -345,14 +405,14 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         label2->SetForegroundColour(wxColor(195,195,195));
         label3->SetForegroundColour(wxColor(195,195,195));
         
-        this->panelsizer->Add(label1, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
-        this->panelsizer->Add(label2, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl2, 2, wxALL, 10);
-        this->panelsizer->Add(label3, 2, wxALL, 10);
-        this->panelsizer->Add(amount, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(label1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(label2, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl2, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(label3, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(amount, 0, wxALL, 10);
 
-        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+        panel_bottom->GetSizer()->Add(createbtn, 0, wxEXPAND | wxALL, 10);
 
         attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
@@ -364,13 +424,13 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         
     //Observer
     }else if(event.GetString()=="Observer"){
-        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, _("SubjectClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         TextCtrl1->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl1->SetForegroundColour(wxColor(255,255,255));
 
         createbtn->Destroy();
-        createbtn = new wxButton( this->panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+        createbtn = new wxButton( panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
         createbtn->SetBackgroundColour(wxColor(14,99,156));
         createbtn->SetForegroundColour(wxColor(255,255,255));
@@ -378,22 +438,22 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Subject Class",wxDefaultPosition, wxSize(100, 25));
         label1->SetForegroundColour(wxColor(195,195,195));
 
-        this->panelsizer->Add(label1, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(label1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl1, 0, wxALL, 10);
 
-        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+        panel_bottom->GetSizer()->Add(createbtn, 0, wxEXPAND | wxALL, 10);
 
         attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
     //Command
     }else if(event.GetString()=="Command"){
 
-        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("ReceiverClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, _("ReceiverClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         TextCtrl1->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl1->SetForegroundColour(wxColor(255,255,255));
 
-        wxTextCtrl *TextCtrl2 = new wxTextCtrl(this->panel_top, wxID_ANY, _("InvokerClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
+        wxTextCtrl *TextCtrl2 = new wxTextCtrl(panel_top, wxID_ANY, _("InvokerClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
         TextCtrl2->SetMaxSize(wxSize(100, 25));
         TextCtrl2->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl2->SetForegroundColour(wxColor(255,255,255));
@@ -418,7 +478,7 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
 
 
         createbtn->Destroy();
-        createbtn = new wxButton( this->panel_bottom, ID_Command, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+        createbtn = new wxButton( panel_bottom, ID_Command, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
         createbtn->SetBackgroundColour(wxColor(14,99,156));
         createbtn->SetForegroundColour(wxColor(255,255,255));
@@ -434,14 +494,14 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxStaticText* label3 = new wxStaticText(panel_top, wxID_ANY,"Invoker Class",wxDefaultPosition, wxSize(100, 25));
         label3->SetForegroundColour(wxColor(195,195,195));
 
-        this->panelsizer->Add(label1, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
-        this->panelsizer->Add(label3, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl2, 2, wxALL, 10);
-        this->panelsizer->Add(label2, 2, wxALL, 10);
-        this->panelsizer->Add(amount, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(label1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(label3, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl2, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(label2, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(amount, 0, wxALL, 10);
 
-        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+        panel_bottom->GetSizer()->Add(createbtn, 0, wxEXPAND | wxALL, 10);
 
         attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
@@ -453,13 +513,13 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         
     //Singleton
     }else if(event.GetString()=="Singleton"){
-        wxTextCtrl *TextCtrl1 = new wxTextCtrl(this->panel_top, wxID_ANY, _("SingletonClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, _("SingletonClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER);
         TextCtrl1->SetMaxSize(wxSize(100, 25));
         TextCtrl1->SetBackgroundColour(wxColor(51,51,51));
         TextCtrl1->SetForegroundColour(wxColor(255,255,255));
 
         createbtn->Destroy();
-        createbtn = new wxButton( this->panel_bottom, ID_Singleton, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
+        createbtn = new wxButton( panel_bottom, ID_Singleton, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
         createbtn->SetBackgroundColour(wxColor(14,99,156));
         createbtn->SetForegroundColour(wxColor(255,255,255));
@@ -467,18 +527,24 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Class Name",wxDefaultPosition, wxSize(100, 25));
         label1->SetForegroundColour(wxColor(195,195,195));
 
-        this->panelsizer->Add(label1, 2, wxALL, 10);
-        this->panelsizer->Add(TextCtrl1, 2, wxALL, 10);
+        panel_top->GetSizer()->Add(label1, 0, wxALL, 10);
+        panel_top->GetSizer()->Add(TextCtrl1, 0, wxALL, 10);
 
-        this->panelsizerbot->Add(createbtn, 1, wxEXPAND | wxALL, 10);
+        panel_bottom->GetSizer()->Add(createbtn, 0, wxEXPAND | wxALL, 10);
 
         attributes.push_back(label1);
         attributes.push_back(TextCtrl1);
     }
 
 
-    panel_top->SetSizerAndFit(panelsizer);
-    panel_bottom->SetSizerAndFit(panelsizerbot);
+    panel_top->SetSizerAndFit(panel_top->GetSizer());
+    panel_bottom->SetSizerAndFit(panel_bottom->GetSizer());
     this->Layout();
+    this->Refresh();
+
+    panel_left->GetSizer()->SetSizeHints(panel_left);
+    panel_right->GetSizer()->SetSizeHints(panel_right);
+    this->GetSizer()->SetSizeHints(this);
+
 }
 
