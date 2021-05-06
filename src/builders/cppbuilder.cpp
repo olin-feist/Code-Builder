@@ -2,8 +2,8 @@
 #include <vector>
 #include <fstream>
 #include "cppbuilder.h"
-#include "fileEditor.h"
-#include "vectorConverter.h"
+#include "../fileEditor.h"
+#include "../vectorConverter.h"
 using namespace std;
 
 

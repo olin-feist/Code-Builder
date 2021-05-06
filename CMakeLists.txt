@@ -1,6 +1,8 @@
 project(CodeBuilder)
 cmake_minimum_required(VERSION 3.15)
 aux_source_directory(./src/ SRC_LIST)
+aux_source_directory(./src/builders/ SRC_LIST)
+
 
 set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)

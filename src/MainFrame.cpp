@@ -10,16 +10,20 @@
 
 #include "MainFrame.h"
 #include "BuildFrame.h"
-#include "cppbuilder.h"
 #include "fileEditor.h"
+
+
+
 //enum for event id's
 enum{
     newcpp = 1,
+    newjava=2
 };
 
 //event table for MainFrame||mainframe
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(newcpp,  MainFrame::BuildMenu)
+    EVT_MENU(newcpp,  MainFrame::BuildMenuCpp)
+    EVT_MENU(newjava,  MainFrame::BuildMenuJava)
     EVT_MENU(wxID_EXIT,  MainFrame::OnQuit)
     EVT_MENU(wxID_OPEN,  MainFrame::OpenFile)
 wxEND_EVENT_TABLE()
@@ -56,13 +60,15 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     wxMenu *file;
     wxMenuItem *quit;
 
+    
+
     menubar = new wxMenuBar;
     file = new wxMenu;
     wxMenu* newFile = new wxMenu;
 
     //new file submenu
     newFile->Append(newcpp, wxT("C++"));
-    newFile->Append(wxID_ANY, wxT("Java"));
+    newFile->Append(newjava, wxT("Java"));
     newFile->Append(wxID_ANY, wxT("Python"));
     file->AppendSubMenu(newFile, wxT("New File"));
 
@@ -71,19 +77,30 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     quit = new wxMenuItem(file, wxID_EXIT, wxT("&Quit\tCtrl+W"));
     file->Append(quit);
-
+    
     menubar->Append(file, wxT("&File"));
+    
     SetMenuBar(menubar);
 
     SetMinClientSize(wxSize(800,800));
     SetMinSize(wxSize(800,800));
     sizer->SetMinSize(wxSize(800,800));
+
+
 }
 
 //method to build frame for new file creation
-void MainFrame::BuildMenu(wxCommandEvent& event){
+void MainFrame::BuildMenuCpp(wxCommandEvent& event){
     
-    BuildFrame* Frame = new BuildFrame("C++ Builder", wxPoint(100, 100), wxSize(300, 300));
+    BuildFrame* Frame = new buildframec("C++ Builder", wxPoint(100, 100), wxSize(300, 300));
+    Frame->SetMinSize(wxSize(300,300));
+    Frame->Show();
+
+}
+
+void MainFrame::BuildMenuJava(wxCommandEvent& event){
+    
+    BuildFrame* Frame = new buildframeJava("Java Builder", wxPoint(100, 100), wxSize(300, 300));
     Frame->SetMinSize(wxSize(300,300));
     Frame->Show();
 }

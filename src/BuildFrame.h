@@ -13,12 +13,9 @@
 
 using namespace std;
 
-class BuildFrame : public wxFrame{
-    public:
-        BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+class BuildFrame:public wxFrame{
 
-
-    private:
+    protected:
         wxPanel* panel_top;
         wxPanel* panel_bottom;
         wxPanel* panel_right;
@@ -26,8 +23,48 @@ class BuildFrame : public wxFrame{
         wxButton *createbtn;
         wxTextCtrl *filename;
         wxDirPickerCtrl *filePickerCtrl;
-       
 
+        BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size):wxFrame(NULL, wxID_ANY, title, pos, size){}
+        
+         void OnFactory(wxCommandEvent &event);
+         void OnObserver(wxCommandEvent &event);
+         void OnCommand(wxCommandEvent &event);
+         void OnSingleton(wxCommandEvent &event);
+
+         void choiceSelected(wxCommandEvent& event);
+         void amountSelected(wxCommandEvent& event);
+         bool validateinput(vector<string> v);
+
+        vector<wxControl*> attributes;
+
+        
+};
+
+class buildframec : public BuildFrame{
+
+    public:
+        buildframec(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+    private:
+        void OnFactory(wxCommandEvent &event);
+        void OnObserver(wxCommandEvent &event);
+        void OnCommand(wxCommandEvent &event);
+        void OnSingleton(wxCommandEvent &event);
+
+        void choiceSelected(wxCommandEvent& event);
+        void amountSelected(wxCommandEvent& event);
+        bool validateinput(vector<string> v);
+    
+
+    wxDECLARE_EVENT_TABLE();
+};
+
+class buildframeJava : public BuildFrame{
+
+    public:
+        buildframeJava(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+    private:
         void OnFactory(wxCommandEvent &event);
         void OnObserver(wxCommandEvent &event);
         void OnCommand(wxCommandEvent &event);
@@ -37,9 +74,7 @@ class BuildFrame : public wxFrame{
         void amountSelected(wxCommandEvent& event);
         bool validateinput(vector<string> v);
 
-        vector<wxControl*> attributes;
-
-        wxDECLARE_EVENT_TABLE();
+    wxDECLARE_EVENT_TABLE();
 };
 
 

@@ -11,7 +11,7 @@
 #include <wx/odcombo.h>
 #include <wx/stc/stc.h>
 
-#include "cppbuilder.h"
+#include "builders/cppbuilder.h"
 #include "BuildFrame.h"
 
 
@@ -27,20 +27,23 @@ enum{
     ID_Desc=7
 };
 
-//event table for buildframe
-wxBEGIN_EVENT_TABLE(BuildFrame, wxFrame)
-    EVT_BUTTON(ID_Factory, BuildFrame::OnFactory)
-    EVT_BUTTON(ID_Observer,  BuildFrame::OnObserver)
-    EVT_BUTTON(ID_Command,  BuildFrame::OnCommand)
-    EVT_BUTTON(ID_Singleton,  BuildFrame::OnSingleton)
-    EVT_COMBOBOX(choiceevent,BuildFrame::choiceSelected)
-    EVT_COMBOBOX(amountsec,BuildFrame::amountSelected)
-wxEND_EVENT_TABLE()
 
     
 
+//event table for buildframe
+wxBEGIN_EVENT_TABLE(buildframec, wxFrame)
+    EVT_BUTTON(ID_Factory, buildframec::OnFactory)
+    EVT_BUTTON(ID_Observer,  buildframec::OnObserver)
+    EVT_BUTTON(ID_Command,  buildframec::OnCommand)
+    EVT_BUTTON(ID_Singleton,  buildframec::OnSingleton)
+    EVT_COMBOBOX(choiceevent,buildframec::choiceSelected)
+    EVT_COMBOBOX(amountsec, buildframec::amountSelected)
+wxEND_EVENT_TABLE()
+
+
+
 //constructor for buildframe
-BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size): wxFrame(NULL, wxID_ANY, title, pos, size){
+buildframec::buildframec(const wxString &title, const wxPoint &pos, const wxSize &size):BuildFrame(title, pos, size){
     panel_right = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_right->SetBackgroundColour(wxColor(30, 30, 30));
     wxBoxSizer *sizerright = new wxBoxSizer(wxVERTICAL);
@@ -188,7 +191,7 @@ BuildFrame::BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &
 }
 
 //check is there is user input, if not send error(false)
-bool BuildFrame::validateinput(vector<string> v){
+bool buildframec::validateinput(vector<string> v){
    
     for(string s: v){
        
@@ -202,7 +205,7 @@ bool BuildFrame::validateinput(vector<string> v){
 }
 
 //creates text box based on the number of elements required
-void BuildFrame::amountSelected(wxCommandEvent &event){
+void buildframec::amountSelected(wxCommandEvent &event){
     //delete attributes from previous 
     if(attributes.size()>6){
         for(int i=6;i<attributes.size();i++){
@@ -245,7 +248,7 @@ void BuildFrame::amountSelected(wxCommandEvent &event){
 }
 
 //create factory c++ on call
-void BuildFrame::OnFactory(wxCommandEvent &event){
+void buildframec::OnFactory(wxCommandEvent &event){
     
     
     string headname;
@@ -278,7 +281,7 @@ void BuildFrame::OnFactory(wxCommandEvent &event){
 }
 
 //create observer c++ on call
-void BuildFrame::OnObserver(wxCommandEvent& event){
+void buildframec::OnObserver(wxCommandEvent& event){
     
     string classname;
     classname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
@@ -295,7 +298,7 @@ void BuildFrame::OnObserver(wxCommandEvent& event){
 }
 
 //create command c++ on call
-void BuildFrame::OnCommand(wxCommandEvent& event){
+void buildframec::OnCommand(wxCommandEvent& event){
     
     string refclass;
     string invokerclass;
@@ -329,7 +332,7 @@ void BuildFrame::OnCommand(wxCommandEvent& event){
 }
 
 //create singleton c++ on call
-void BuildFrame::OnSingleton(wxCommandEvent& event){
+void buildframec::OnSingleton(wxCommandEvent& event){
   
         
     string classname;
@@ -347,7 +350,7 @@ void BuildFrame::OnSingleton(wxCommandEvent& event){
 
 
 //method for handling selection of different oop patterns
-void BuildFrame::choiceSelected(wxCommandEvent& event){
+void buildframec::choiceSelected(wxCommandEvent& event){
     for(wxControl* w: attributes){
         w->Destroy();
        
@@ -547,4 +550,6 @@ void BuildFrame::choiceSelected(wxCommandEvent& event){
     this->GetSizer()->SetSizeHints(this);
 
 }
+
+
 

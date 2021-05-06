@@ -24,7 +24,8 @@ class MainFrame : public wxFrame{
         wxTreeCtrl* filetree=new wxTreeCtrl();
         
         void OnQuit(wxCommandEvent &event);
-        void BuildMenu(wxCommandEvent &event);
+        void BuildMenuJava(wxCommandEvent &event);
+        void BuildMenuCpp(wxCommandEvent &event);
         void OpenFile(wxCommandEvent &event);
         
         wxDECLARE_EVENT_TABLE();

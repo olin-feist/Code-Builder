@@ -1,7 +1,6 @@
 
 #include <iostream>
 #include <vector>
-#include "cppbuilder.h"
 #include <fstream>
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
