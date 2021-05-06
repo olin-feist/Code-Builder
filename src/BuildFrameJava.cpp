@@ -11,7 +11,7 @@
 #include <wx/odcombo.h>
 #include <wx/stc/stc.h>
 
-#include "builders/cppbuilder.h"
+#include "builders/javabuilder.h"
 #include "BuildFrame.h"
 
 
@@ -54,7 +54,7 @@ buildframeJava::buildframeJava(const wxString &title, const wxPoint &pos, const 
     font.SetPointSize(font.GetPointSize() + 10);
     desc->SetFont(font);
 
-    desc->SetForegroundColour(wxColor(14,99,156));
+    desc->SetForegroundColour(wxColor(248,152,29));
 
     wxStaticText* desc1 = new wxStaticText(panel_right, wxID_ANY,"Select design pattern from dropdown\n menu and fill in fields to create .java file",wxDefaultPosition, wxDefaultSize,wxTE_MULTILINE);
     desc1->SetForegroundColour(wxColor(255,255,255));
@@ -247,7 +247,7 @@ void buildframeJava::amountSelected(wxCommandEvent &event){
     this->GetSizer()->SetSizeHints(this);
 }
 
-//create factory c++ on call
+//create factory java on call
 void buildframeJava::OnFactory(wxCommandEvent &event){
     
     
@@ -272,7 +272,7 @@ void buildframeJava::OnFactory(wxCommandEvent &event){
     
     //test.insert(test.end(),v.begin(),v.end());
     if(validateinput(test)){
-        cppbuilder::writeFile(cppbuilder::factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile(javabuilder::factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
     
@@ -280,7 +280,7 @@ void buildframeJava::OnFactory(wxCommandEvent &event){
 
 }
 
-//create observer c++ on call
+//create observer java on call
 void buildframeJava::OnObserver(wxCommandEvent& event){
     
     string classname;
@@ -291,13 +291,13 @@ void buildframeJava::OnObserver(wxCommandEvent& event){
     test.push_back(filePickerCtrl->GetPath().ToStdString());
     test.push_back(filename->GetValue().ToStdString());
     if(validateinput(test)){
-        cppbuilder::writeFile( cppbuilder::observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile( javabuilder::observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 
 }
 
-//create command c++ on call
+//create command java on call
 void buildframeJava::OnCommand(wxCommandEvent& event){
     
     string refclass;
@@ -326,12 +326,12 @@ void buildframeJava::OnCommand(wxCommandEvent& event){
 
     test.insert(test.end(),classnames.begin(),classnames.end());
     if(validateinput(test)){
-        cppbuilder::writeFile(cppbuilder::commandbuilder(refclass,invokerclass,classnames),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile(javabuilder::commandbuilder(refclass,invokerclass,classnames),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 }
 
-//create singleton c++ on call
+//create singleton java on call
 void buildframeJava::OnSingleton(wxCommandEvent& event){
   
         
@@ -343,7 +343,7 @@ void buildframeJava::OnSingleton(wxCommandEvent& event){
     test.push_back(filePickerCtrl->GetPath().ToStdString());
     test.push_back(filename->GetValue().ToStdString());
     if(validateinput(test)){
-        cppbuilder::writeFile( cppbuilder::singletonbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile( javabuilder::singletonbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 }
@@ -361,7 +361,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
 
     //factory
     if(event.GetString()=="Factory"){
-        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, wxT("MainClass"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
+        wxTextCtrl *TextCtrl1 = new wxTextCtrl(panel_top, wxID_ANY, wxT("MainInterface"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         TextCtrl1->SetMargins(wxPoint(5,5));
         wxTextCtrl *TextCtrl2 = new wxTextCtrl(panel_top, wxID_ANY, wxT("MethodName"), wxDefaultPosition, wxSize(100, 25), wxSIMPLE_BORDER );
         TextCtrl2->SetMargins(wxPoint(5,5));
@@ -389,7 +389,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
         //add create button
         createbtn->Destroy();
         createbtn = new wxButton(panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
-        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
         
         
@@ -399,7 +399,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
         TextCtrl2->SetMaxSize(wxSize(100, 25));
         amount->SetMaxSize(wxSize(100, 25));
         
-        wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Main Class",wxDefaultPosition, wxSize(100, 25));
+        wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Main Interface",wxDefaultPosition, wxSize(100, 25));
         wxStaticText* label2 = new wxStaticText(panel_top, wxID_ANY,"Method Name",wxDefaultPosition, wxSize(100, 25));
         wxStaticText* label3 = new wxStaticText(panel_top, wxID_ANY,"Number Factories",wxDefaultPosition, wxSize(100, 25));
         
@@ -435,7 +435,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Subject Class",wxDefaultPosition, wxSize(100, 25));
@@ -483,7 +483,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Command, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
 
@@ -524,7 +524,7 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Singleton, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(14,99,156));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Class Name",wxDefaultPosition, wxSize(100, 25));
@@ -542,12 +542,14 @@ void buildframeJava::choiceSelected(wxCommandEvent& event){
 
     panel_top->SetSizerAndFit(panel_top->GetSizer());
     panel_bottom->SetSizerAndFit(panel_bottom->GetSizer());
-    this->Layout();
-    this->Refresh();
+
 
     panel_left->GetSizer()->SetSizeHints(panel_left);
     panel_right->GetSizer()->SetSizeHints(panel_right);
     this->GetSizer()->SetSizeHints(this);
+
+    this->Layout();
+    this->Refresh();
 
 }
 

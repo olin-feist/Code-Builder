@@ -187,6 +187,8 @@ buildframec::buildframec(const wxString &title, const wxPoint &pos, const wxSize
     panel_right->GetSizer()->SetSizeHints(panel_right);
     this->GetSizer()->SetSizeHints(this);
 
+    this->Layout();
+    this->Refresh();
     
 }
 
@@ -542,13 +544,14 @@ void buildframec::choiceSelected(wxCommandEvent& event){
 
     panel_top->SetSizerAndFit(panel_top->GetSizer());
     panel_bottom->SetSizerAndFit(panel_bottom->GetSizer());
-    this->Layout();
-    this->Refresh();
+
 
     panel_left->GetSizer()->SetSizeHints(panel_left);
     panel_right->GetSizer()->SetSizeHints(panel_right);
     this->GetSizer()->SetSizeHints(this);
 
+    this->Layout();
+    this->Refresh();
 }
 
 

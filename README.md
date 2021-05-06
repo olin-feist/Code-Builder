@@ -9,8 +9,8 @@
 ### Overall
 - [X] GUI
 - [ ] Class Repairer
-- [ ] C++
-- [ ] Java
+- [x] C++
+- [x] Java
 - [ ] Python
 - [ ] Advance User Input
 - [x] CMake
@@ -27,11 +27,11 @@
 - [ ] Decorator 
 
 ### Java Patterns
-- [ ] Factory
-- [ ] Singleton
-- [ ] Command
+- [x] Factory
+- [x] Singleton
+- [x] Command
 - [ ] Composite
-- [ ] Observer 
+- [x] Observer 
 - [ ] Adapter 
 - [ ] Facade 
 - [ ] Builder 
