@@ -16,22 +16,14 @@ vector<string> javabuilder::observerbuilder(string classname){
     string path="../defaultcode/Java/observer/observer.java";
     
 
-    
-
-
     //get vector of file
     vector<string> filevector =  vectorConverter::textToVector(path);
-
-
-    
 
     
     //add classname name
     filevector=fileEditor::addClassName(filevector,classname,"$classname");
 
    
-    
-
     return filevector;
 }
 
