@@ -11,7 +11,7 @@
 - [ ] Class Repairer
 - [x] C++
 - [x] Java
-- [ ] Python
+- [x] Python
 - [ ] Advance User Input
 - [x] CMake
 
@@ -38,11 +38,11 @@
 - [ ] Decorator 
 
 ### Python Patterns
-- [ ] Factory
-- [ ] Singleton
-- [ ] Command
+- [x] Factory
+- [x] Singleton
+- [x] Command
 - [ ] Composite
-- [ ] Observer 
+- [x] Observer 
 - [ ] Adapter 
 - [ ] Facade 
 - [ ] Builder 

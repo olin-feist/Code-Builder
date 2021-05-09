@@ -26,7 +26,9 @@ class MainFrame : public wxFrame{
         void OnQuit(wxCommandEvent &event);
         void BuildMenuJava(wxCommandEvent &event);
         void BuildMenuCpp(wxCommandEvent &event);
+        void BuildMenuPython(wxCommandEvent& event);
         void OpenFile(wxCommandEvent &event);
+        void OpenConsole(wxCommandEvent& event);
         
         wxDECLARE_EVENT_TABLE();
 };

@@ -17,15 +17,19 @@
 //enum for event id's
 enum{
     newcpp = 1,
-    newjava=2
+    newjava=2,
+    newpython=3,
+    ID_Dev=4
 };
 
 //event table for MainFrame||mainframe
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(newcpp,  MainFrame::BuildMenuCpp)
     EVT_MENU(newjava,  MainFrame::BuildMenuJava)
+    EVT_MENU(newpython,  MainFrame::BuildMenuPython)
     EVT_MENU(wxID_EXIT,  MainFrame::OnQuit)
     EVT_MENU(wxID_OPEN,  MainFrame::OpenFile)
+    EVT_MENU(ID_Dev,  MainFrame::OpenConsole)
 wxEND_EVENT_TABLE()
 
 
@@ -63,13 +67,14 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     
 
     menubar = new wxMenuBar;
+    //file menu
     file = new wxMenu;
     wxMenu* newFile = new wxMenu;
 
     //new file submenu
     newFile->Append(newcpp, wxT("C++"));
     newFile->Append(newjava, wxT("Java"));
-    newFile->Append(wxID_ANY, wxT("Python"));
+    newFile->Append(newpython, wxT("Python"));
     file->AppendSubMenu(newFile, wxT("New File"));
 
     file->Append(wxID_OPEN, wxT("&Open"));
@@ -80,7 +85,16 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     
     menubar->Append(file, wxT("&File"));
     
+    //options menu
+    wxMenu *options = new wxMenu;
+    options->Append(ID_Dev, wxT("&Close Console"));
+    menubar->Append(options, wxT("&Options"));
+
+    //set menu bar
     SetMenuBar(menubar);
+
+
+    
 
     SetMinClientSize(wxSize(800,800));
     SetMinSize(wxSize(800,800));
@@ -103,6 +117,17 @@ void MainFrame::BuildMenuJava(wxCommandEvent& event){
     BuildFrame* Frame = new buildframeJava("Java Builder", wxPoint(100, 100), wxSize(300, 300));
     Frame->SetMinSize(wxSize(300,300));
     Frame->Show();
+}
+
+void MainFrame::BuildMenuPython(wxCommandEvent& event){
+    
+    BuildFrame* Frame = new buildframePy("Python Builder", wxPoint(100, 100), wxSize(300, 300));
+    Frame->SetMinSize(wxSize(300,300));
+    Frame->Show();
+}
+
+void MainFrame::OpenConsole(wxCommandEvent& event){
+    FreeConsole();
 }
 
 void MainFrame::OpenFile(wxCommandEvent &event){

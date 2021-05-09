@@ -6,14 +6,14 @@ class $classname:
    @staticmethod 
    def getInstance():
 
-      if $classname.__instance == None:
+      if self.__instance == None:
          $classname()
 
-      return $classname.__instance
+      return self.__instance
 
    def __init__(self):
 
-      if $classname.__instance != None:
+      if self.__instance != None:
 
       else:
-         $classname.__instance = self
+         self.__instance = self

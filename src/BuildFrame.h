@@ -77,4 +77,22 @@ class buildframeJava : public BuildFrame{
     wxDECLARE_EVENT_TABLE();
 };
 
+class buildframePy : public BuildFrame{
+
+    public:
+        buildframePy(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+    private:
+        void OnFactory(wxCommandEvent &event);
+        void OnObserver(wxCommandEvent &event);
+        void OnCommand(wxCommandEvent &event);
+        void OnSingleton(wxCommandEvent &event);
+
+        void choiceSelected(wxCommandEvent& event);
+        void amountSelected(wxCommandEvent& event);
+        bool validateinput(vector<string> v);
+
+    wxDECLARE_EVENT_TABLE();
+};
+
 
