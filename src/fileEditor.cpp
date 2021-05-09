@@ -63,7 +63,7 @@ wxTreeCtrl* fileEditor::getClassTree(string path, wxTreeCtrl *tree){
 
         //loop through line
         for(int i=0;i<result.size();i++){
-            if(((result[0].substr(0,2)).compare("//"))){
+            if(((result[0].substr(0,1)).compare("#"))&&((result[0].substr(0,2)).compare("//"))){
                 //if class add class name to tree
                 if(!(result[i].compare("class"))){
                     tree->AppendItem(rootId, result[i+1]);
