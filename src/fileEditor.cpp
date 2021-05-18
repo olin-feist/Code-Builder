@@ -78,3 +78,14 @@ wxTreeCtrl* fileEditor::getClassTree(string path, wxTreeCtrl *tree){
 
 }
 
+int findend(vector<string> file,int index){
+    string line = file[index];
+    if(line.find("{") != string::npos){
+        return findend(file,index++);
+    }else if(line.find("}") != string::npos){
+        return index;
+    }else{
+        return findend(file,index);
+    }
+    
+}

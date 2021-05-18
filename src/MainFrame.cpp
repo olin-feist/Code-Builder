@@ -19,7 +19,9 @@ enum{
     newcpp = 1,
     newjava=2,
     newpython=3,
-    ID_Dev=4
+    ID_Dev=4,
+    ID_Setters=5,
+    ID_Getters=6
 };
 
 //event table for MainFrame||mainframe
@@ -90,6 +92,13 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     options->Append(ID_Dev, wxT("&Close Console"));
     menubar->Append(options, wxT("&Options"));
 
+    //repair menu
+    wxMenu *repair = new wxMenu;
+    repair->Append(ID_Setters, wxT("&Add Getters"));
+    repair->Append(ID_Getters, wxT("&Add Setters"));
+    menubar->Append(repair, wxT("&Repair"));
+    repair->Enable(ID_Setters, false);
+    repair->Enable(ID_Getters, false);
     //set menu bar
     SetMenuBar(menubar);
 
@@ -174,6 +183,9 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     
     panel_left->GetSizer()->Add(filetree, 1, wxALL|wxEXPAND, 10);
     
+    //enable repair
+    GetMenuBar()->GetMenu(2)->Enable(ID_Setters, true);
+    GetMenuBar()->GetMenu(2)->Enable(ID_Getters, true);
 
     
     this->Layout();

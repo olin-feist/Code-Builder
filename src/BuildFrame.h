@@ -23,19 +23,20 @@ class BuildFrame:public wxFrame{
         wxButton *createbtn;
         wxTextCtrl *filename;
         wxDirPickerCtrl *filePickerCtrl;
+        vector<wxControl*> attributes;
 
         BuildFrame(const wxString &title, const wxPoint &pos, const wxSize &size):wxFrame(NULL, wxID_ANY, title, pos, size){}
         
-         void OnFactory(wxCommandEvent &event);
-         void OnObserver(wxCommandEvent &event);
-         void OnCommand(wxCommandEvent &event);
-         void OnSingleton(wxCommandEvent &event);
+        void OnFactory(wxCommandEvent &event);
+        void OnObserver(wxCommandEvent &event);
+        void OnCommand(wxCommandEvent &event);
+        void OnSingleton(wxCommandEvent &event);
 
-         void choiceSelected(wxCommandEvent& event);
-         void amountSelected(wxCommandEvent& event);
-         bool validateinput(vector<string> v);
+        void choiceSelected(wxCommandEvent& event);
+        void amountSelected(wxCommandEvent& event);
+        bool validateinput(vector<string> v);
 
-        vector<wxControl*> attributes;
+        
 
         
 };
