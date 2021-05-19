@@ -10,5 +10,7 @@ namespace fileEditor{
         vector<string> addClassName(vector<string> file, string name, string flag);
         vector<string> add(vector<string> file, vector<string> values);
         wxTreeCtrl* getClassTree(string path, wxTreeCtrl *tree);
+        void addPyGetters(string path);
+        void addPySetters(string path);
         
 };

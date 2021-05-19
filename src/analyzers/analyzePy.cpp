@@ -32,7 +32,7 @@ vector<string> pyanalyzer::getInstanceVar(vector<string> file, string name){
     //loop through file
     for(int i=0;i<file.size();i++){
         string line=file[i];
-        cout<<line<<endl;
+        
         //find class def
         if(line.find("class") != string::npos){
             
@@ -70,4 +70,43 @@ vector<string> pyanalyzer::getInstanceVar(vector<string> file, string name){
     return v;    
 }
 
+bool isWhitespaces(string s){
+    bool whitespaces=true;
+    for(int j=0;j<s.size();j++){
+        if(s[j]!=' ')
+            whitespaces=false;
+    }
+
+    return whitespaces;
+}
+
+
+int pyanalyzer::getEndOfClass(vector<string> file, string name){
+    //loop through file
+    string line;
+    for(int i=0;i<file.size();i++){
+        line=file[i];
+                    
+        //check if name matches
+        if(line.find(name) != string::npos&&line.find("#") == string::npos){
+            
+            //loop through class
+            for(int j=i+1;j<file.size();j++){
+                line=file[j];
+                if(line.size()>0){
+
+                    //make sure its still within class
+                    if(line.find("    ") == string::npos){
+                        
+                        return j+1;
+                    }
+                }
+               
+            }
+                
+        }
+        
+    } 
+    return file.size()+1;
+}
 

@@ -22,6 +22,7 @@ class MainFrame : public wxFrame{
         wxPanel* panel_right;
         wxTextCtrl* textedit=new wxTextCtrl();
         wxTreeCtrl* filetree=new wxTreeCtrl();
+        wxString filename;
         
         void OnQuit(wxCommandEvent &event);
         void BuildMenuJava(wxCommandEvent &event);
@@ -29,6 +30,8 @@ class MainFrame : public wxFrame{
         void BuildMenuPython(wxCommandEvent& event);
         void OpenFile(wxCommandEvent &event);
         void OpenConsole(wxCommandEvent& event);
+        void AddGetters(wxCommandEvent& event);
+        void AddSetters(wxCommandEvent& event);
         
         wxDECLARE_EVENT_TABLE();
 };

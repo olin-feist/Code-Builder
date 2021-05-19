@@ -32,6 +32,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_EXIT,  MainFrame::OnQuit)
     EVT_MENU(wxID_OPEN,  MainFrame::OpenFile)
     EVT_MENU(ID_Dev,  MainFrame::OpenConsole)
+    EVT_MENU(ID_Setters,  MainFrame::AddSetters)
+    EVT_MENU(ID_Getters,  MainFrame::AddGetters)
 wxEND_EVENT_TABLE()
 
 
@@ -94,8 +96,8 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     //repair menu
     wxMenu *repair = new wxMenu;
-    repair->Append(ID_Setters, wxT("&Add Getters"));
-    repair->Append(ID_Getters, wxT("&Add Setters"));
+    repair->Append(ID_Getters, wxT("&Add Getters"));
+    repair->Append(ID_Setters, wxT("&Add Setters"));
     menubar->Append(repair, wxT("&Repair"));
     repair->Enable(ID_Setters, false);
     repair->Enable(ID_Getters, false);
@@ -147,7 +149,7 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     if(!(dialog.GetPath().IsNull())){
 
     
-    wxString filename = dialog.GetPath();
+    filename = dialog.GetPath();
     textedit->Destroy();
     textedit = new wxTextCtrl(panel_right, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(200,200), 
     wxVSCROLL | wxHSCROLL | wxBORDER_NONE | wxWANTS_CHARS|wxTE_MULTILINE);
@@ -192,6 +194,14 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     panel_right->Layout();
 
     }
+}
+
+void MainFrame::AddGetters(wxCommandEvent& event){
+    fileEditor::addPyGetters(filename.ToStdString());
+}
+
+void MainFrame::AddSetters(wxCommandEvent& event){
+    fileEditor::addPySetters(filename.ToStdString()); 
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event){

@@ -7,6 +7,7 @@
 using namespace std;
 namespace pyanalyzer{
     vector<string> getInstanceVar(vector<string> file, string name);
+    int getEndOfClass(vector<string> file, string name);
 }
 
 
