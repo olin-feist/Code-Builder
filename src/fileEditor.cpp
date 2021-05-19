@@ -96,9 +96,9 @@ void fileEditor::addPyGetters(string path){
         getter.clear();
         for(string i:ivar){
             getter.push_back("");
-            getter.push_back("\t# getter method");
-            getter.push_back("\tdef get_"+i+"(self):");
-            getter.push_back("\t\treturn self."+i);
+            getter.push_back("    # getter method");
+            getter.push_back("    def get_"+i+"(self):");
+            getter.push_back("        return self."+i);
             getter.push_back("");
 
         }
@@ -132,9 +132,9 @@ void fileEditor::addPySetters(string path){
         getter.clear();
         for(string i:ivar){
             getter.push_back("");
-            getter.push_back("\t# setter method");
-            getter.push_back("\tdef set_"+i+"(self,a):");
-            getter.push_back("\t\tself."+i+"=a");
+            getter.push_back("    # setter method");
+            getter.push_back("    def set_"+i+"(self,a):");
+            getter.push_back("        self."+i+"=a");
             getter.push_back("");
 
         }
