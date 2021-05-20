@@ -1,16 +1,16 @@
 //command interface
-public interface Command {
+interface Command {
    void execute();
 }
 
-public class $referenceclass  {
+class $referenceclass  {
 	
 }
 
 // Invoker 
-public class $invokerclass {
+class $invokerclass {
 
-    public Command *cmd;
+    public Command cmd;
 
 	void setCommand(Command *cmd) {
 		this.cmd = cmd;
@@ -23,11 +23,11 @@ public class $invokerclass {
 }
 
 // command class
-public class $classname implements Command {
+class $classname implements Command {
 
     private $referenceclass rclass;
 
-    $classname($referenceclass  *rclass){
+    $classname($referenceclass  rclass){
         this.rclass=rclass;
     }
 

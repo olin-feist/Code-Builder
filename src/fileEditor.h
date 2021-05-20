@@ -12,5 +12,6 @@ namespace fileEditor{
         wxTreeCtrl* getClassTree(string path, wxTreeCtrl *tree);
         void addPyGetters(string path);
         void addPySetters(string path);
+        void addJavaGetters(string path);
         
 };

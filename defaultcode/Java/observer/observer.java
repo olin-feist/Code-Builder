@@ -1,5 +1,5 @@
 //subject class
-public class $classname {
+class $classname {
     List<Observer> observers; 
 
     void attach(Observer obs) {
@@ -15,7 +15,7 @@ public class $classname {
 }
 
 //observer class
-class Observer {
+Observer {
 
     public $classname model;
     

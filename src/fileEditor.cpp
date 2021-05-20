@@ -1,14 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include "fileEditor.h"
 #include "vectorConverter.h"
 #include <wx/wx.h>
 #include <wx/treectrl.h>
 #include "analyzers/analyze.h"
-#include <sstream>
 
 using namespace std;
+
 
 vector<string> fileEditor::addClassName(vector<string> file, string name, string flag){
     
@@ -151,15 +152,59 @@ void fileEditor::addPySetters(string path){
 
 }
 
+void fileEditor::addJavaGetters(string path){
+    cout<<path<<endl;
+    system((""+path).c_str());
+    
+    vector<string> file = vectorConverter::textToVector(path);
+    vector<string> classnames;
 
-int findend(vector<string> file,int index){
-    string line = file[index];
-    if(line.find("{") != string::npos){
-        return findend(file,index++);
-    }else if(line.find("}") != string::npos){
-        return index;
-    }else{
-        return findend(file,index);
+    for(string line:file){
+        vector<string> result; 
+        if(line.find("class ")!=string::npos&&line.find("//")==string::npos){
+            
+            istringstream iss(line); 
+            for(string line; iss >> line; ) 
+                result.push_back(line); 
+            for(int i=0;i<result.size();i++){
+                string s=result[i];
+                if(s=="class"){
+                    result[i+1].erase(remove(result[i+1].begin(), result[i+1].end(), '{'), result[i+1].end());
+                    result[i+1].erase(remove(result[i+1].begin(), result[i+1].end(), ' '), result[i+1].end());
+                    classnames.push_back(result[i+1]);
+                }
+            }
+            
+        }
+        result.clear();
     }
     
+    for(string s:classnames){
+        
+        vector<string> ivar = javaanalyzer::getClassAttributes("cache\\"+s+".class");
+
+        vector<string> getter;
+        getter.clear();
+        for(int i=0;i<ivar.size();i+=2){
+            getter.push_back("");
+            getter.push_back("    // Get "+ivar[i+1]);
+            getter.push_back("    public "+ivar[i]+" get"+ivar[i+1]+"() {");
+            getter.push_back("        return "+ivar[i+1]+";");
+            getter.push_back("    }");
+            getter.push_back("");
+
+        }
+     
+            
+            
+        file.insert(file.begin() + javaanalyzer::getEndOfClass(file,2)-1 ,getter.begin(),getter.end());
+        ivar.clear();
+    }
+    
+    ofstream ofile(path, ofstream::trunc);
+    for(string line:file){
+        ofile<<line<<endl;
+    }
+    ofile.close();
+
 }

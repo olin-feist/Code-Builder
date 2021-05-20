@@ -14,6 +14,9 @@ namespace pyanalyzer{
 /*
 To be implmented later for source code parsing of java and c++
 */
-namespace javaanalyzer{}
+namespace javaanalyzer{
+    vector<string> getClassAttributes(string path);
+    int getEndOfClass(vector<string> file,int index);
+}
 
 namespace cppanalyzer{}

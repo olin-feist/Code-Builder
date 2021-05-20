@@ -197,7 +197,7 @@ void MainFrame::OpenFile(wxCommandEvent &event){
 }
 
 void MainFrame::AddGetters(wxCommandEvent& event){
-    fileEditor::addPyGetters(filename.ToStdString());
+    fileEditor::addJavaGetters(filename.ToStdString());
 }
 
 void MainFrame::AddSetters(wxCommandEvent& event){
