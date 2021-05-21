@@ -8,7 +8,7 @@
 
 ### Overall
 - [X] GUI
-- [ ] Class Repairer
+- [X] Class Repairer
 - [x] C++
 - [x] Java
 - [x] Python

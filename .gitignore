@@ -1,6 +1,5 @@
 *.exe
 .vscode/
-newCpp.cpp
 Makefile
 build/*
 !build/.gitkeep.txt
