@@ -12,7 +12,7 @@ class $invokerclass {
 
     public Command cmd;
 
-	void setCommand(Command *cmd) {
+	void setCommand(Command cmd) {
 		this.cmd = cmd;
 	}
 

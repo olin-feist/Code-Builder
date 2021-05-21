@@ -154,7 +154,7 @@ void fileEditor::addPySetters(string path){
 
 void fileEditor::addJavaGetters(string path){
     cout<<path<<endl;
-    system((""+path).c_str());
+    system(("cd .. && javac -d src\\cache "+path).c_str());
     
     vector<string> file = vectorConverter::textToVector(path);
     vector<string> classnames;
@@ -195,9 +195,9 @@ void fileEditor::addJavaGetters(string path){
 
         }
      
+        cout<<javaanalyzer::getEndOfClass(file,javaanalyzer::getClasIndex(file,s)+1)<<endl;
             
-            
-        file.insert(file.begin() + javaanalyzer::getEndOfClass(file,2)-1 ,getter.begin(),getter.end());
+        file.insert(file.begin() + javaanalyzer::getEndOfClass(file,javaanalyzer::getClasIndex(file,s)+1),getter.begin(),getter.end());
         ivar.clear();
     }
     

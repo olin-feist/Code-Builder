@@ -12,9 +12,9 @@ using namespace std;
 
 vector<string> javaanalyzer::getClassAttributes(string path){
     
-    system((""+path+" > \\cache\\javadecomp.txt").c_str());
+    system(("cd .. && javap -private src\\"+path+" > src\\cache\\javadecomp.txt").c_str());
     
-    vector<string> file=vectorConverter::textToVector("\\cache\\javadecomp.txt");
+    vector<string> file=vectorConverter::textToVector("..\\src\\cache\\javadecomp.txt");
     
     vector<string> ret;
 
@@ -37,14 +37,14 @@ vector<string> javaanalyzer::getClassAttributes(string path){
                         result.push_back(line); 
 
                     for(string s: result){
-                        if(s!="public"||s!="private"||s!="protected"){
-                            if(s=="final"){
+                        if(s.compare("public")!=0&&s.compare("private")!=0&&s.compare("protected")!=0){
+                            if(s.compare("final")==0){
                                 break;
                             }else{
                                
                                 s.erase(remove(s.begin(), s.end(), ';'), s.end());
-                                
-                        
+                                cout<<s<<endl;
+
                                 ret.push_back(s);
                             }
                         }
@@ -64,15 +64,25 @@ int javaanalyzer::getEndOfClass(vector<string> file,int index){
     
     if(line.find("{") != string::npos){
         int i=index+1;
-        return getEndOfClass(file,getEndOfClass(file,i));
+        return getEndOfClass(file,getEndOfClass(file,i)+1);
     }else if(line.find("}") != string::npos){
-        cout<<line<<endl;
         return index;
     }else{
         int i=index+1;
-        return javaanalyzer::getEndOfClass(file,i);
+        return getEndOfClass(file,i);
     }
     
+}
+
+
+int javaanalyzer::getClasIndex(vector<string> file,string s){
+    for(int i=0;i<file.size();i++){
+        string line = file[i];
+        if(line.find("class")!=string::npos&&line.find(s)!=string::npos&&line.find("//")==string::npos)
+            return i;
+    }
+
+    return -1;
 }
 
 

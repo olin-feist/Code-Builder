@@ -17,6 +17,7 @@ To be implmented later for source code parsing of java and c++
 namespace javaanalyzer{
     vector<string> getClassAttributes(string path);
     int getEndOfClass(vector<string> file,int index);
+    int getClasIndex(vector<string> file,string s);
 }
 
 namespace cppanalyzer{}
