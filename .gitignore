@@ -3,5 +3,5 @@
 newCpp.cpp
 Makefile
 build/*
-!build/.gitkeep
+!build/.gitkeep.txt
 *.class
