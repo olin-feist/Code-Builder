@@ -32,7 +32,7 @@ class MainFrame : public wxFrame{
         void OpenConsole(wxCommandEvent& event);
         void AddGetters(wxCommandEvent& event);
         void AddSetters(wxCommandEvent& event);
-        
+        void ReparInfo(wxCommandEvent& event);
         wxDECLARE_EVENT_TABLE();
 };
 

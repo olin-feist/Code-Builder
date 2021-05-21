@@ -11,7 +11,7 @@
 #include <wx/odcombo.h>
 #include <wx/stc/stc.h>
 
-#include "builders/pythonbuilder.h"
+#include "../builders/javabuilder.h"
 #include "BuildFrame.h"
 
 
@@ -30,33 +30,33 @@ enum{
 
     
 //event table for buildframe
-wxBEGIN_EVENT_TABLE(buildframePy, wxFrame)
-    EVT_BUTTON(ID_Factory, buildframePy::OnFactory)
-    EVT_BUTTON(ID_Observer,  buildframePy::OnObserver)
-    EVT_BUTTON(ID_Command,  buildframePy::OnCommand)
-    EVT_BUTTON(ID_Singleton,  buildframePy::OnSingleton)
-    EVT_COMBOBOX(choiceevent,buildframePy::choiceSelected)
-    EVT_COMBOBOX(amountsec,buildframePy::amountSelected)
+wxBEGIN_EVENT_TABLE(buildframeJava, wxFrame)
+    EVT_BUTTON(ID_Factory, buildframeJava::OnFactory)
+    EVT_BUTTON(ID_Observer,  buildframeJava::OnObserver)
+    EVT_BUTTON(ID_Command,  buildframeJava::OnCommand)
+    EVT_BUTTON(ID_Singleton,  buildframeJava::OnSingleton)
+    EVT_COMBOBOX(choiceevent,buildframeJava::choiceSelected)
+    EVT_COMBOBOX(amountsec,buildframeJava::amountSelected)
 wxEND_EVENT_TABLE()
 
 
 
 
 //constructor for buildframe
-buildframePy::buildframePy(const wxString &title, const wxPoint &pos, const wxSize &size):BuildFrame(title, pos, size){
+buildframeJava::buildframeJava(const wxString &title, const wxPoint &pos, const wxSize &size):BuildFrame(title, pos, size){
     panel_right = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100));
     panel_right->SetBackgroundColour(wxColor(30, 30, 30));
     wxBoxSizer *sizerright = new wxBoxSizer(wxVERTICAL);
     
     
-    wxStaticText* desc = new wxStaticText(panel_right, wxID_ANY,"Python Builder",wxDefaultPosition, wxDefaultSize);
+    wxStaticText* desc = new wxStaticText(panel_right, wxID_ANY,"Java Builder",wxDefaultPosition, wxDefaultSize);
     wxFont font = desc->GetFont();
     font.SetPointSize(font.GetPointSize() + 10);
     desc->SetFont(font);
 
-    desc->SetForegroundColour(wxColor(255,208,64));
+    desc->SetForegroundColour(wxColor(248,152,29));
 
-    wxStaticText* desc1 = new wxStaticText(panel_right, wxID_ANY,"Select design pattern from dropdown\n menu and fill in fields to create .py file",wxDefaultPosition, wxDefaultSize,wxTE_MULTILINE);
+    wxStaticText* desc1 = new wxStaticText(panel_right, wxID_ANY,"Select design pattern from dropdown\n menu and fill in fields to create .java file",wxDefaultPosition, wxDefaultSize,wxTE_MULTILINE);
     desc1->SetForegroundColour(wxColor(255,255,255));
     font = desc1->GetFont();
     font.SetPointSize(font.GetPointSize() + 1);
@@ -191,7 +191,7 @@ buildframePy::buildframePy(const wxString &title, const wxPoint &pos, const wxSi
 }
 
 //check is there is user input, if not send error(false)
-bool buildframePy::validateinput(vector<string> v){
+bool buildframeJava::validateinput(vector<string> v){
    
     for(string s: v){
        
@@ -205,7 +205,7 @@ bool buildframePy::validateinput(vector<string> v){
 }
 
 //creates text box based on the number of elements required
-void buildframePy::amountSelected(wxCommandEvent &event){
+void buildframeJava::amountSelected(wxCommandEvent &event){
     //delete attributes from previous 
     if(attributes.size()>6){
         for(int i=6;i<attributes.size();i++){
@@ -248,7 +248,7 @@ void buildframePy::amountSelected(wxCommandEvent &event){
 }
 
 //create factory java on call
-void buildframePy::OnFactory(wxCommandEvent &event){
+void buildframeJava::OnFactory(wxCommandEvent &event){
     
     
     string headname;
@@ -272,7 +272,7 @@ void buildframePy::OnFactory(wxCommandEvent &event){
     
     //test.insert(test.end(),v.begin(),v.end());
     if(validateinput(test)){
-        pythonbuilder::writeFile(pythonbuilder::factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile(javabuilder::factorybuilder(headname,methodname,v),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
     
@@ -281,7 +281,7 @@ void buildframePy::OnFactory(wxCommandEvent &event){
 }
 
 //create observer java on call
-void buildframePy::OnObserver(wxCommandEvent& event){
+void buildframeJava::OnObserver(wxCommandEvent& event){
     
     string classname;
     classname=((wxTextCtrl*) attributes[1])->GetValue().ToStdString();
@@ -291,14 +291,14 @@ void buildframePy::OnObserver(wxCommandEvent& event){
     test.push_back(filePickerCtrl->GetPath().ToStdString());
     test.push_back(filename->GetValue().ToStdString());
     if(validateinput(test)){
-        pythonbuilder::writeFile( pythonbuilder::observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile( javabuilder::observerbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 
 }
 
 //create command java on call
-void buildframePy::OnCommand(wxCommandEvent& event){
+void buildframeJava::OnCommand(wxCommandEvent& event){
     
     string refclass;
     string invokerclass;
@@ -326,13 +326,13 @@ void buildframePy::OnCommand(wxCommandEvent& event){
 
     test.insert(test.end(),classnames.begin(),classnames.end());
     if(validateinput(test)){
-        pythonbuilder::writeFile(pythonbuilder::commandbuilder(refclass,invokerclass,classnames),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile(javabuilder::commandbuilder(refclass,invokerclass,classnames),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 }
 
 //create singleton java on call
-void buildframePy::OnSingleton(wxCommandEvent& event){
+void buildframeJava::OnSingleton(wxCommandEvent& event){
   
         
     string classname;
@@ -343,13 +343,14 @@ void buildframePy::OnSingleton(wxCommandEvent& event){
     test.push_back(filePickerCtrl->GetPath().ToStdString());
     test.push_back(filename->GetValue().ToStdString());
     if(validateinput(test)){
-        pythonbuilder::writeFile( pythonbuilder::singletonbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
+        javabuilder::writeFile( javabuilder::singletonbuilder(classname),filePickerCtrl->GetPath().ToStdString(),filename->GetValue().ToStdString());
         Close(true);
     }
 }
 
+
 //method for handling selection of different oop patterns
-void buildframePy::choiceSelected(wxCommandEvent& event){
+void buildframeJava::choiceSelected(wxCommandEvent& event){
     for(wxControl* w: attributes){
         w->Destroy();
        
@@ -388,7 +389,7 @@ void buildframePy::choiceSelected(wxCommandEvent& event){
         //add create button
         createbtn->Destroy();
         createbtn = new wxButton(panel_bottom, ID_Factory, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
-        createbtn->SetBackgroundColour(wxColor(255,208,64));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
         
         
@@ -434,7 +435,7 @@ void buildframePy::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Observer, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(255,208,64));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Subject Class",wxDefaultPosition, wxSize(100, 25));
@@ -482,7 +483,7 @@ void buildframePy::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Command, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(255,208,64));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
 
@@ -523,7 +524,7 @@ void buildframePy::choiceSelected(wxCommandEvent& event){
         createbtn->Destroy();
         createbtn = new wxButton( panel_bottom, ID_Singleton, wxT("Create"), wxDefaultPosition, wxSize(100, 25), wxNO_BORDER);
         createbtn->SetMaxSize(wxSize(100, 25));
-        createbtn->SetBackgroundColour(wxColor(255,208,64));
+        createbtn->SetBackgroundColour(wxColor(248,152,29));
         createbtn->SetForegroundColour(wxColor(255,255,255));
 
         wxStaticText* label1 = new wxStaticText(panel_top, wxID_ANY,"Class Name",wxDefaultPosition, wxSize(100, 25));

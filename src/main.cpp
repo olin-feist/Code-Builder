@@ -12,8 +12,8 @@
 #include <wx/odcombo.h>
 
 
-#include "BuildFrame.h"
-#include "MainFrame.h"
+#include "gui/BuildFrame.h"
+#include "gui/MainFrame.h"
 
 using namespace std;
 

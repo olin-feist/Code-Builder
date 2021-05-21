@@ -9,9 +9,10 @@
 #include <wx/wx.h>
 #include <wx/dirctrl.h>
 
+#include "InfoDialog.h"
 #include "MainFrame.h"
 #include "BuildFrame.h"
-#include "fileEditor.h"
+#include "../fileEditor.h"
 
 
 
@@ -22,7 +23,8 @@ enum{
     newpython=3,
     ID_Dev=4,
     ID_Setters=5,
-    ID_Getters=6
+    ID_Getters=6,
+    ID_Repair_Info=7
 };
 
 //event table for MainFrame||mainframe
@@ -35,6 +37,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_Dev,  MainFrame::OpenConsole)
     EVT_MENU(ID_Setters,  MainFrame::AddSetters)
     EVT_MENU(ID_Getters,  MainFrame::AddGetters)
+    EVT_MENU(ID_Repair_Info,  MainFrame::ReparInfo)
 wxEND_EVENT_TABLE()
 
 
@@ -99,6 +102,8 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     wxMenu *repair = new wxMenu;
     repair->Append(ID_Getters, wxT("&Add Getters"));
     repair->Append(ID_Setters, wxT("&Add Setters"));
+    repair->AppendSeparator();
+    repair->Append(ID_Repair_Info, wxT("&Info"));
     menubar->Append(repair, wxT("&Repair"));
     repair->Enable(ID_Setters, false);
     repair->Enable(ID_Getters, false);
@@ -153,7 +158,7 @@ void MainFrame::OpenFile(wxCommandEvent &event){
     filename = dialog.GetPath();
     textedit->Destroy();
     textedit = new wxTextCtrl(panel_right, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(200,200), 
-    wxVSCROLL | wxHSCROLL | wxBORDER_NONE | wxWANTS_CHARS|wxTE_MULTILINE);
+    wxBORDER_NONE | wxWANTS_CHARS|wxTE_MULTILINE);
     textedit->SetBackgroundColour(wxColor(30, 30, 30));
     textedit->SetForegroundColour(wxColor(195,195,195));
     textedit->LoadFile(filename,wxTEXT_TYPE_ANY);
@@ -239,6 +244,11 @@ void MainFrame::AddSetters(wxCommandEvent& event){
         wxMessageDialog *dial = new wxMessageDialog(NULL, wxT("File Type Not Recognized"), wxT("Error"), wxOK | wxICON_ERROR);
         dial->ShowModal();
     }
+}
+
+void MainFrame::ReparInfo(wxCommandEvent& event){
+    wxDialog *info=new InfoDialog(wxT("Repair Info"));
+   
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event){
