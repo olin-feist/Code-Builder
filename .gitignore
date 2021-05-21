@@ -2,4 +2,6 @@
 .vscode/
 newCpp.cpp
 Makefile
-build/
+build/*
+!build/.gitkeep
+*.class

@@ -1,6 +1,0 @@
-Compiled from "filename.java"
-class wdad implements Command {
-  private ReceiverClass rclass;
-  wdad(ReceiverClass);
-  public void execute();
-}

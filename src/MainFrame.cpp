@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
@@ -197,11 +198,47 @@ void MainFrame::OpenFile(wxCommandEvent &event){
 }
 
 void MainFrame::AddGetters(wxCommandEvent& event){
-    fileEditor::addJavaGetters(filename.ToStdString());
+
+    stringstream test(filename.ToStdString());
+    string segment;
+    vector<string> seglist;
+
+    while(getline(test, segment, '.')){
+        seglist.push_back(segment);
+    }
+
+
+    if(seglist[seglist.size()-1].compare("java")==0){
+        fileEditor::addJavaGetters(filename.ToStdString());
+    }else if(seglist[seglist.size()-1].compare("py")==0){
+        fileEditor::addPyGetters(filename.ToStdString());
+    }else{
+        wxMessageDialog *dial = new wxMessageDialog(NULL, wxT("File Type Not Recognized"), wxT("Error"), wxOK | wxICON_ERROR);
+        dial->ShowModal();
+    }
+
+
+    
 }
 
 void MainFrame::AddSetters(wxCommandEvent& event){
-    fileEditor::addPySetters(filename.ToStdString()); 
+    stringstream test(filename.ToStdString());
+    string segment;
+    vector<string> seglist;
+
+    while(getline(test, segment, '.')){
+        seglist.push_back(segment);
+    }
+
+
+    if(seglist[seglist.size()-1].compare("java")==0){
+        fileEditor::addJavaSetters(filename.ToStdString());
+    }else if(seglist[seglist.size()-1].compare("py")==0){
+        fileEditor::addPySetters(filename.ToStdString());
+    }else{
+        wxMessageDialog *dial = new wxMessageDialog(NULL, wxT("File Type Not Recognized"), wxT("Error"), wxOK | wxICON_ERROR);
+        dial->ShowModal();
+    }
 }
 
 void MainFrame::OnQuit(wxCommandEvent& event){

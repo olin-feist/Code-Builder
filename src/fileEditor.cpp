@@ -208,3 +208,61 @@ void fileEditor::addJavaGetters(string path){
     ofile.close();
 
 }
+
+
+void fileEditor::addJavaSetters(string path){
+    cout<<path<<endl;
+    system(("cd .. && javac -d src\\cache "+path).c_str());
+    
+    vector<string> file = vectorConverter::textToVector(path);
+    vector<string> classnames;
+
+    for(string line:file){
+        vector<string> result; 
+        if(line.find("class ")!=string::npos&&line.find("//")==string::npos){
+            
+            istringstream iss(line); 
+            for(string line; iss >> line; ) 
+                result.push_back(line); 
+            for(int i=0;i<result.size();i++){
+                string s=result[i];
+                if(s=="class"){
+                    result[i+1].erase(remove(result[i+1].begin(), result[i+1].end(), '{'), result[i+1].end());
+                    result[i+1].erase(remove(result[i+1].begin(), result[i+1].end(), ' '), result[i+1].end());
+                    classnames.push_back(result[i+1]);
+                }
+            }
+            
+        }
+        result.clear();
+    }
+    
+    for(string s:classnames){
+        
+        vector<string> ivar = javaanalyzer::getClassAttributes("cache\\"+s+".class");
+
+        vector<string> getter;
+        getter.clear();
+        for(int i=0;i<ivar.size();i+=2){
+            getter.push_back("");
+            getter.push_back("    // Set "+ivar[i+1]);
+            getter.push_back("    public void set"+ivar[i+1]+"("+ivar[i]+" a) {");
+            getter.push_back("        this."+ivar[i+1]+"=a;");
+            getter.push_back("    }");
+            getter.push_back("");
+
+        }
+     
+        cout<<javaanalyzer::getEndOfClass(file,javaanalyzer::getClasIndex(file,s)+1)<<endl;
+            
+        file.insert(file.begin() + javaanalyzer::getEndOfClass(file,javaanalyzer::getClasIndex(file,s)+1),getter.begin(),getter.end());
+        ivar.clear();
+    }
+    
+    ofstream ofile(path, ofstream::trunc);
+    for(string line:file){
+        ofile<<line<<endl;
+    }
+    ofile.close();
+
+}

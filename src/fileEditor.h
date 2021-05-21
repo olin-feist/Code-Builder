@@ -13,5 +13,6 @@ namespace fileEditor{
         void addPyGetters(string path);
         void addPySetters(string path);
         void addJavaGetters(string path);
+        void addJavaSetters(string path);
         
 };
